@@ -109,14 +109,14 @@ export function Dashboard() {
                                 Welcome, <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/60">{user?.name?.split(' ')[0] || "Scholar"}</span>
                             </h1>
                             <p className="text-slate-400 font-medium text-lg max-w-lg mb-8">
-                                Your journey to excellence is <span className="text-white font-bold">45% complete</span>. Finalize your scholarship application to unlock early bird benefits.
+                                Your journey to excellence is <span className="text-white font-bold">45% complete</span>. Finalize your PhD application to unlock early bird benefits.
                             </p>
                             <div className="flex flex-wrap items-center justify-center md:justify-start gap-4">
                                 <Button className="bg-primary text-white hover:bg-primary-hover px-8 py-4 rounded-2xl font-bold shadow-xl shadow-primary/20 hover:scale-105 transition-all">
                                     Continue Application <ArrowRight className="h-4 w-4 ml-2" />
                                 </Button>
                                 <div className="text-slate-500 font-bold text-sm bg-white/5 px-6 py-4 rounded-2xl border border-white/5">
-                                    Application ID: <span className="text-slate-300">#VSAT-2026-9812</span>
+                                    Application ID: <span className="text-slate-300">#PHD-2026-9812</span>
                                 </div>
                             </div>
                         </div>
@@ -285,7 +285,7 @@ export function Dashboard() {
                             <div className="grid grid-cols-1 gap-4">
                                 {[
                                     { icon: BookOpen, title: "Exam Prep Kit", desc: "Syllabus & Samples", color: "text-blue-600", bg: "bg-blue-50", onClick: () => { } },
-                                    { icon: Download, title: "VSAT Guidebook", desc: "Complete PDF Guide", color: "text-purple-600", bg: "bg-purple-50", onClick: () => { } },
+                                    { icon: Download, title: "Admission Guidebook", desc: "Complete PDF Guide", color: "text-purple-600", bg: "bg-purple-50", onClick: () => { } },
                                 ].map((tool, i) => (
                                     <button
                                         key={i}

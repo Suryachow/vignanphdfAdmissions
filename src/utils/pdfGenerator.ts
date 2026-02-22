@@ -110,7 +110,7 @@ const renderTickBox = (label: string, isChecked: boolean) => {
  * Generate and download application form as PDF
  */
 export const downloadApplicationFormPDF = async (formData: any) => {
-    const appNumber = `VSAT-2026-${formData.personal.phone?.slice(-4) || '0242'}`;
+    const appNumber = `PHD-2026-${formData.personal.phone?.slice(-4) || '0242'}`;
     const fileName = `Application_Form_${appNumber}.pdf`;
     const generationDate = new Date().toLocaleDateString('en-IN', {
         day: '2-digit',
@@ -158,7 +158,7 @@ export const downloadApplicationFormPDF = async (formData: any) => {
     page1.innerHTML = `
         ${styles}
         <div class="page-container">
-            <div style="position: absolute; left: 10px; bottom: 40px; transform: rotate(-90deg); transform-origin: left bottom; font-size: 14px; font-weight: 900; color: #cbd5e1; letter-spacing: 15px; opacity: 0.3;">V-SAT 2026</div>
+            <div style="position: absolute; left: 10px; bottom: 40px; transform: rotate(-90deg); transform-origin: left bottom; font-size: 14px; font-weight: 900; color: #cbd5e1; letter-spacing: 15px; opacity: 0.3;">PHD-ADMISSION 2026</div>
             
             <div class="header">
                 <div style="display: flex; gap: 6px;">
@@ -282,7 +282,7 @@ export const downloadApplicationFormPDF = async (formData: any) => {
     page2.innerHTML = `
         ${styles}
         <div class="page-container">
-            <div style="position: absolute; left: 10px; bottom: 40px; transform: rotate(-90deg); transform-origin: left bottom; font-size: 14px; font-weight: 900; color: #cbd5e1; letter-spacing: 15px; opacity: 0.3;">V-SAT 2026</div>
+            <div style="position: absolute; left: 10px; bottom: 40px; transform: rotate(-90deg); transform-origin: left bottom; font-size: 14px; font-weight: 900; color: #cbd5e1; letter-spacing: 15px; opacity: 0.3;">PHD-ADMISSION 2026</div>
 
             <div class="section-title">09. Educational Background</div>
             
@@ -391,7 +391,7 @@ export const downloadApplicationFormPDF = async (formData: any) => {
             </div>
 
             <div style="margin-top: 60px; text-align: center; font-size: 9px; font-weight: 700; color: #94a3b8; letter-spacing: 2px;">
-                V-SAT 2026 • VIGNAN DEEMED TO BE UNIVERSITY • ADMISSIONS OFFICE
+                PHD ADMISSION 2026 • VIGNAN DEEMED TO BE UNIVERSITY • ADMISSIONS OFFICE
             </div>
             
             <div style="margin-top: auto; padding-top: 20px; text-align: right; font-size: 8px; font-weight: 700; color: #94a3b8;">PAGE 2 / 2</div>

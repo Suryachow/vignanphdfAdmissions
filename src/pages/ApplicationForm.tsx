@@ -686,7 +686,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onSubmit }) => {
                     firstname: userFromStorage?.name || "Student",
                     email: userFromStorage?.email || "",
                     phone: userFromStorage?.phone || "9999999999",
-                    productinfo: "VSAT Application Fee",
+                    productinfo: "PhD Application Fee",
                 }),
             });
             if (!res.ok) {

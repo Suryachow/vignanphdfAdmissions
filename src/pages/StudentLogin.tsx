@@ -310,8 +310,7 @@ export function StudentLogin() {
                                                             <option value="hyderabad">Hyderabad</option>
                                                         </select>
                                                         <select value={formData.program} onChange={e => setFormData({ ...formData, program: e.target.value, specialization: "" })} className="w-full bg-slate-50 border-2 border-slate-100 rounded-xl py-3 px-4 text-sm font-bold focus:border-primary outline-none appearance-none">
-                                                            <option value="">Program</option>
-                                                            <option value="phd">Ph.D</option>
+                                                            <option value="phd">Ph.D Admission</option>
                                                         </select>
                                                     </div>
 
@@ -387,9 +386,9 @@ export function StudentLogin() {
                 <div className="absolute bottom-0 w-full bg-slate-900 overflow-hidden py-4 border-t border-white/5" style={{ zIndex: 20 }}>
                     <div className="container px-4 mx-auto flex items-center gap-12 whitespace-nowrap overflow-hidden">
                         {[
-                            { date: "NOV 13", title: "VSAT ONLINE REGISTRATION OPENS", color: "text-primary" },
-                            { date: "APR 15", title: "LAST DATE OF EXAMINATION APPLICATION", color: "text-rose-500" },
-                            { date: "MAY 20", title: "RESULT ANNOUNCEMENT & COUNSELING", color: "text-emerald-500" },
+                            { date: "DEC 01", title: "PhD ONLINE REGISTRATION OPENS", color: "text-primary" },
+                            { date: "JAN 30", title: "LAST DATE FOR APPLICATION SUBMISSION", color: "text-rose-500" },
+                            { date: "FEB 15", title: "ENTRANCE TEST & INTERVIEW", color: "text-emerald-500" },
                         ].map((event, i) => (
                             <div key={i} className="flex items-center gap-4 flex-shrink-0">
                                 <span className={cn("text-xs font-black px-2 py-0.5 rounded", event.color, "bg-white/5")}>{event.date}</span>
@@ -409,7 +408,7 @@ export function StudentLogin() {
 
                     {[
                         { step: 1, title: "Register & Verify", desc: "Create your account and verify your email via OTP.", color: "bg-primary" },
-                        { step: 2, title: "Application Form", desc: "Pay the scholarship fee and fill in your academic details.", color: "bg-indigo-600" },
+                        { step: 2, title: "Application Form", desc: "Pay the admission fee and fill in your academic details.", color: "bg-indigo-600" },
                         { step: 3, title: "Documents", desc: "Upload your academic transcripts and identity proofs.", color: "bg-slate-900" },
                         { step: 4, title: "Slot Booking", desc: "Select your preferred date and time for the examination.", color: "bg-emerald-500" },
                         { step: 5, title: "Success", desc: "Download your hall ticket and you're ready to fly!", icon: Check, color: "bg-emerald-600" }

@@ -101,7 +101,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ data }) => {
                     <div className="space-y-4">
                         <div className="w-44 border-2 border-slate-800 p-2 text-center bg-white">
                             <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 border-b border-slate-100 pb-1">Application Number</p>
-                            <span className="text-xl font-black text-[#004C91] tracking-[0.2em]">{data.personal.phone?.slice(-4) || '2026'}V-SAT</span>
+                            <span className="text-xl font-black text-[#004C91] tracking-[0.2em]">{data.personal.phone?.slice(-4) || '2026'}PHD</span>
                         </div>
                         <div className="w-44 h-44 border-2 border-dashed border-slate-400 flex flex-col items-center justify-center bg-slate-50 relative group">
                             <div className="absolute inset-2 border border-slate-200"></div>
@@ -328,7 +328,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ data }) => {
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div className="p-4 border-2 border-slate-200 rounded-xl bg-white">
                                         <p className="text-[8px] font-bold text-slate-400 uppercase tracking-wider mb-1">Transaction ID</p>
-                                        <p className="text-sm font-black text-slate-800 font-mono">{data.payment.transactionId || "VSAT-PENDING-XXXX"}</p>
+                                        <p className="text-sm font-black text-slate-800 font-mono">{data.payment.transactionId || "PHD-PENDING-XXXX"}</p>
                                     </div>
                                     <div className="p-4 border-2 border-slate-200 rounded-xl bg-white flex items-center justify-between">
                                         <div>
@@ -385,7 +385,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ data }) => {
 
                 {/* DECORATIVE ELEMENTS */}
                 <div className="absolute left-0 bottom-0 py-8 px-2 flex flex-col items-center justify-center opacity-20 pointer-events-none">
-                    <p className="text-[14px] font-black text-slate-400 uppercase tracking-[1em] rotate-180 [writing-mode:vertical-lr]">V-SAT 2026</p>
+                    <p className="text-[14px] font-black text-slate-400 uppercase tracking-[1em] rotate-180 [writing-mode:vertical-lr]">PHD-ADMISSION 2026</p>
                 </div>
             </div>
 

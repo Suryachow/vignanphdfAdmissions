@@ -164,7 +164,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ data, onChange }) => {
                     firstname: user?.name || "Student",
                     email: user?.email || "student@example.com",
                     phone: user?.phone ? String(user.phone).replace(/\D/g, "").slice(-10) : "9999999999",
-                    productinfo: "VSAT Application Fee",
+                    productinfo: "PhD Admission Fee",
                 }),
             });
             if (!res.ok) {
@@ -256,7 +256,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ data, onChange }) => {
                         <ShieldCheck className="h-3 w-3 fill-emerald-400 text-emerald-400" /> Secure Checkout 2026
                     </div>
                     <h1 className="text-4xl font-black text-slate-900 tracking-tighter leading-none">Complete your payment</h1>
-                    <p className="text-slate-500 text-lg font-medium leading-relaxed max-w-lg">Initiate your scholarship registration via our enterprise-grade secure payment gateway.</p>
+                    <p className="text-slate-500 text-lg font-medium leading-relaxed max-w-lg">Initiate your PhD admission registration via our enterprise-grade secure payment gateway.</p>
                 </div>
                 {isUpdatingPayment && (
                     <div className="flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-[10px] font-black uppercase tracking-wider animate-pulse">

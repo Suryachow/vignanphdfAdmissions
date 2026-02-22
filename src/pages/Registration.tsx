@@ -52,27 +52,6 @@ export function Registration() {
 
     // Program Options
     const programOptions = {
-        btech: [
-            { value: "cse", label: "CSE (Computer Science and Engineering)" },
-            { value: "cse_aiml", label: "CSE (AI & ML / Cyber Security / Data Science / IoT)" },
-            { value: "ece", label: "ECE" },
-            { value: "eee", label: "EEE" },
-            { value: "it", label: "Information Technology (IT)" },
-            { value: "mechanical", label: "Mechanical Engineering" },
-            { value: "robotics", label: "Robotics & Automation" },
-        ],
-        management: [
-            { value: "mba", label: "MBA" },
-            { value: "bba", label: "BBA" },
-        ],
-        pharmacy: [
-            { value: "bpharmacy", label: "B.Pharmacy" },
-            { value: "pharmd", label: "Pharm D" },
-        ],
-        law: [
-            { value: "bba_llb", label: "BBA.LLB" },
-            { value: "ba_llb", label: "BA.LLB" },
-        ],
         phd: [
             { value: "cse", label: "Computer Science & Engineering" },
             { value: "ece", label: "Electronics & Communication" },
@@ -284,7 +263,7 @@ export function Registration() {
                                         <div className="bg-gradient-to-r from-primary to-blue-600 px-8 py-7">
                                             <div className="flex items-center gap-3 mb-1">
                                                 <Zap className="h-6 w-6 text-blue-100" />
-                                                <h1 className="text-xl font-black text-white tracking-tight">Apply for VSAT 2026</h1>
+                                                <h1 className="text-xl font-black text-white tracking-tight">Apply for Ph.D 2026</h1>
                                             </div>
                                             <p className="text-blue-100 text-sm font-medium ml-9">
                                                 Complete your registration to start.
@@ -383,8 +362,6 @@ export function Registration() {
                                                         value={formData.program}
                                                         onChange={e => setFormData({ ...formData, program: e.target.value })}
                                                     >
-                                                        <option value="">Select Program</option>
-                                                        <option value="btech">B.Tech</option>
                                                         <option value="phd">Ph.D</option>
                                                     </select>
                                                 </div>
@@ -426,9 +403,9 @@ export function Registration() {
                 <div className="absolute bottom-0 w-full bg-slate-900 overflow-hidden py-4 border-t border-white/5">
                     <div className="container px-4 mx-auto flex items-center gap-12 whitespace-nowrap overflow-hidden">
                         {[
-                            { date: "NOV 13", title: "VSAT ONLINE REGISTRATION OPENS", color: "text-primary" },
-                            { date: "APR 15", title: "LAST DATE OF EXAMINATION APPLICATION", color: "text-rose-500" },
-                            { date: "MAY 20", title: "RESULT ANNOUNCEMENT & COUNSELING", color: "text-emerald-500" },
+                            { date: "DEC 01", title: "PhD ONLINE REGISTRATION OPENS", color: "text-primary" },
+                            { date: "JAN 30", title: "LAST DATE FOR APPLICATION SUBMISSION", color: "text-rose-500" },
+                            { date: "FEB 15", title: "ENTRANCE TEST & INTERVIEW", color: "text-emerald-500" },
                         ].map((event, i) => (
                             <div key={i} className="flex items-center gap-4 flex-shrink-0">
                                 <span className={cn("text-xs font-black px-2 py-0.5 rounded", event.color, "bg-white/5")}>{event.date}</span>
@@ -448,7 +425,7 @@ export function Registration() {
 
                     {[
                         { step: 1, title: "Register & Verify", desc: "Create your account and verify your mobile number via OTP.", color: "bg-primary" },
-                        { step: 2, title: "Application Form", desc: "Pay the scholarship fee and fill in your academic details.", color: "bg-indigo-600" },
+                        { step: 2, title: "Application Form", desc: "Pay the admission fee and fill in your academic details.", color: "bg-indigo-600" },
                         { step: 3, title: "Documents", desc: "Upload your academic transcripts and identity proofs.", color: "bg-slate-900" },
                         { step: 4, title: "Slot Booking", desc: "Select your preferred date and time for the examination.", color: "bg-emerald-500" },
                         { step: 5, title: "Success", desc: "Download your hall ticket and you're ready to fly!", icon: Check, color: "bg-emerald-600" }
