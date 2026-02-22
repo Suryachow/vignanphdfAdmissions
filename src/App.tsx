@@ -1,4 +1,4 @@
-import { lazy, Suspense, Component } from "react"
+import type { lazy, Suspense, Component } from "react"
 import type { ReactNode } from "react"
 import {
   BrowserRouter as Router,
