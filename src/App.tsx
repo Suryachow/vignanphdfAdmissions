@@ -1,4 +1,4 @@
-import type { lazy, Suspense, Component } from "react"
+import { lazy, Suspense, Component } from "react"
 import type { ReactNode } from "react"
 import {
   BrowserRouter as Router,
@@ -137,8 +137,8 @@ function App() {
                   </Route>
 
                   {/* Root fallback */}
-                  <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                  <Route path="*" element={<Navigate to="/dashboard" replace />} />
+                  <Route path="/" element={<Navigate to="/register" replace />} />
+                  <Route path="*" element={<Navigate to="/register" replace />} />
                 </Routes>
               </Suspense>
             </StepProvider>

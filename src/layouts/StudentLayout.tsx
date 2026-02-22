@@ -42,8 +42,8 @@ export function StudentLayout() {
                                 <ShieldCheck className="text-white h-5 w-5" />
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-xl font-bold tracking-tight text-slate-900 leading-none">LeadSense</span>
-                                <span className="text-[8px] uppercase tracking-[0.3em] font-bold text-slate-400 mt-1">Academic Portal</span>
+                                <span className="text-xl font-bold tracking-tight text-slate-900 leading-none">Vignan</span>
+                                <span className="text-[8px] uppercase tracking-[0.3em] font-bold text-slate-400 mt-1">PhD Admissions Portal</span>
                             </div>
                         </div>
                         <nav className="hidden md:flex items-center gap-1 border-l border-slate-200 pl-6">
@@ -105,7 +105,7 @@ export function StudentLayout() {
                     <div className="flex flex-col md:flex-row justify-between items-center gap-8">
                         <div className="flex items-center gap-3 grayscale opacity-50">
                             <ShieldCheck className="h-6 w-6 text-slate-900" />
-                            <span className="font-bold tracking-tighter text-slate-900">LeadSense Academic CRM</span>
+                            <span className="font-bold tracking-tighter text-slate-900">Vignan PhD Portal</span>
                         </div>
                         <div className="flex gap-8 text-sm font-bold text-slate-400 uppercase tracking-widest text-[10px]">
                             <a href="#" className="hover:text-primary transition-colors">Privacy Charter</a>

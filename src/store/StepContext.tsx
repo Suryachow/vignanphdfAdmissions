@@ -34,7 +34,7 @@ const defaultSteps: StepState = {
 export const StepProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [steps, setSteps] = useState<StepState>(() => {
         try {
-            const saved = localStorage.getItem('leadsense_student_steps')
+            const saved = localStorage.getItem('vignan_student_steps')
             if (saved) {
                 const parsed = JSON.parse(saved)
                 // Ensure login exists for backwards compatibility
@@ -48,7 +48,7 @@ export const StepProvider: React.FC<{ children: React.ReactNode }> = ({ children
     })
 
     useEffect(() => {
-        localStorage.setItem('leadsense_student_steps', JSON.stringify(steps))
+        localStorage.setItem('vignan_student_steps', JSON.stringify(steps))
     }, [steps])
 
     const setOtpVerified = (val: boolean) => {
@@ -77,7 +77,7 @@ export const StepProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const logout = () => {
         setSteps({ ...defaultSteps })
-        localStorage.removeItem('leadsense_student_steps')
+        localStorage.removeItem('vignan_student_steps')
     }
 
     const canAccess = (_route: string) => {
