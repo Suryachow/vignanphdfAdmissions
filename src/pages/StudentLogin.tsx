@@ -243,10 +243,10 @@ export function StudentLogin() {
                                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-black uppercase tracking-widest">
                                     <Zap className="h-4 w-4 fill-current" /> Ph.D Admissions Open 2026-27
                                 </div>
-                                <h1 className="text-5xl lg:text-7xl font-black text-slate-900 tracking-tighter leading-[0.95]">
+                                <h1 className="text-4xl lg:text-6xl font-black text-slate-900 tracking-tighter leading-[1.1]">
                                     Research <span className="text-primary italic">& Innovation</span> <br /> at Vignan
                                 </h1>
-                                <p className="text-lg lg:text-xl text-slate-600 font-medium leading-relaxed" style={{ maxWidth: '540px' }}>
+                                <p className="text-base lg:text-lg text-slate-600 font-medium leading-relaxed" style={{ maxWidth: '500px' }}>
                                     Pursue your Ph.D with world-class faculty and state-of-the-art research facilities at Vignan's University.
                                 </p>
                             </motion.div>
@@ -260,13 +260,13 @@ export function StudentLogin() {
                             >
                                 <Card className="border-none shadow-2xl shadow-primary/20 bg-white/95 backdrop-blur-xl relative overflow-hidden" style={{ width: '100%', maxWidth: '440px' }}>
                                     <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 blur-3xl" />
-                                    <div className="bg-gradient-to-r from-primary to-blue-600 px-8 py-7 relative z-10">
-                                        <div className="flex items-center gap-3 mb-1">
-                                            {mode === 'register' ? <Zap className="h-6 w-6 text-blue-100" /> : <ShieldCheck className="h-6 w-6 text-blue-100" />}
-                                            <h1 className="text-xl font-black text-white tracking-tight">{mode === 'register' ? 'Apply for Ph.D' : 'Student Login'}</h1>
+                                    <div className="bg-gradient-to-br from-primary via-primary to-blue-700 px-6 py-6 border-b border-white/10 relative z-10">
+                                        <div className="flex items-center gap-2 mb-0.5">
+                                            {mode === 'register' ? <Zap className="h-5 w-5 text-yellow-300 fill-yellow-300" /> : <ShieldCheck className="h-5 w-5 text-blue-100" />}
+                                            <h1 className="text-lg font-black text-white tracking-tight uppercase">{mode === 'register' ? 'Apply for Ph.D' : 'Student Login'}</h1>
                                         </div>
-                                        <p className="text-blue-100 text-sm font-medium ml-9">
-                                            {mode === 'register' ? 'Complete your registration to start.' : 'Verify with email to access portal'}
+                                        <p className="text-blue-100/80 text-[10px] font-bold uppercase tracking-widest ml-7">
+                                            {mode === 'register' ? 'Research Admissions Portal' : 'Access your dashboard'}
                                         </p>
                                     </div>
 
@@ -275,31 +275,31 @@ export function StudentLogin() {
                                             <>
                                                 <div className="space-y-4">
                                                     <div className="space-y-1.5">
-                                                        <label className="text-[10px] font-black uppercase text-slate-500 ml-1">Full Name</label>
+                                                        <label className="text-[10px] font-black uppercase text-slate-400 ml-1 tracking-wider">Full Name</label>
                                                         <div className="relative group">
-                                                            <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-primary" />
-                                                            <input value={formData.fullName} onChange={e => setFormData({ ...formData, fullName: e.target.value })} className="w-full bg-slate-50 border-2 border-slate-100 rounded-xl py-3 pl-10 pr-4 text-sm font-bold focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all" placeholder="Enter your name" />
+                                                            <User className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 group-focus-within:text-primary transition-colors" />
+                                                            <input value={formData.fullName} onChange={e => setFormData({ ...formData, fullName: e.target.value })} className="w-full bg-slate-50/50 border-2 border-slate-100 rounded-xl py-2.5 pl-10 pr-4 text-sm font-bold focus:border-primary focus:bg-white transition-all outline-none" placeholder="Your full name" />
                                                         </div>
                                                     </div>
 
                                                     <div className="space-y-1.5">
-                                                        <label className="text-[10px] font-black uppercase text-slate-500 ml-1">Email (Verification Required)</label>
+                                                        <label className="text-[10px] font-black uppercase text-slate-400 ml-1 tracking-wider">Email Address</label>
                                                         <div className="flex gap-2">
                                                             <div className="relative group flex-1">
-                                                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-primary" />
-                                                                <input value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} className="w-full bg-slate-50 border-2 border-slate-100 rounded-xl py-3 pl-10 pr-4 text-sm font-bold focus:border-primary outline-none" placeholder="name@email.com" />
+                                                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 group-focus-within:text-primary transition-colors" />
+                                                                <input value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} className="w-full bg-slate-50/50 border-2 border-slate-100 rounded-xl py-2.5 pl-10 pr-4 text-sm font-bold focus:border-primary focus:bg-white transition-all outline-none" placeholder="name@email.com" />
                                                             </div>
-                                                            <Button size="sm" onClick={handleSendRegOtp} className="rounded-xl px-4" variant={isEmailOtpVerified ? "success" : "primary"}>
-                                                                {isEmailOtpVerified ? <Check className="h-4 w-4" /> : "Verify"}
+                                                            <Button size="sm" onClick={handleSendRegOtp} className="rounded-xl px-4 h-[42px] font-black uppercase text-[10px]" variant={isEmailOtpVerified ? "success" : "primary"}>
+                                                                {isEmailOtpVerified ? <Check className="h-3.5 w-3.5" /> : "Verify"}
                                                             </Button>
                                                         </div>
                                                     </div>
 
                                                     <div className="space-y-1.5">
-                                                        <label className="text-[10px] font-black uppercase text-slate-500 ml-1">Mobile Number</label>
+                                                        <label className="text-[10px] font-black uppercase text-slate-400 ml-1 tracking-wider">Mobile Number</label>
                                                         <div className="relative group">
-                                                            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-primary" />
-                                                            <input value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} className="w-full bg-slate-50 border-2 border-slate-100 rounded-xl py-3 pl-10 pr-4 text-sm font-bold focus:border-primary outline-none" placeholder="10-digit number" />
+                                                            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 group-focus-within:text-primary transition-colors" />
+                                                            <input value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} className="w-full bg-slate-50/50 border-2 border-slate-100 rounded-xl py-2.5 pl-10 pr-4 text-sm font-bold focus:border-primary focus:bg-white transition-all outline-none" placeholder="10-digit mobile number" />
                                                         </div>
                                                     </div>
 
@@ -327,8 +327,8 @@ export function StudentLogin() {
                                                     )}
                                                 </div>
 
-                                                <Button className="w-full h-14 rounded-2xl text-lg font-black uppercase tracking-widest gap-2 shadow-xl shadow-emerald-500/20 bg-emerald-500 hover:bg-emerald-600 text-white transition-all transform hover:scale-[1.02]" onClick={handleRegister}>
-                                                    Register Now <ChevronRight className="h-5 w-5" />
+                                                <Button className="w-full h-12 rounded-xl text-sm font-black uppercase tracking-widest gap-2 shadow-lg shadow-emerald-500/20 bg-emerald-500 hover:bg-emerald-600 text-white transition-all transform hover:scale-[1.01]" onClick={handleRegister}>
+                                                    Register Now <ChevronRight className="h-4 w-4" />
                                                 </Button>
 
                                                 <div className="text-center pt-4 border-t border-slate-100">
