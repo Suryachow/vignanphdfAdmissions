@@ -5,11 +5,8 @@
  * Set VITE_API_URL in .env.production for AWS deployment.
  */
 
-// ─── Base URL ─────────────────────────────────────────────────────────────
-export const API_BASE: string =
-  typeof import.meta !== "undefined" && import.meta.env?.VITE_API_URL
-    ? import.meta.env.VITE_API_URL.replace(/\/$/, "")
-    : "http://13.204.96.58:8000";
+// ─── Base URL (Hardcoded for production stability) ────────────────────────
+export const API_BASE: string = "http://13.204.96.58:8000";
 
 /** Construct a full API URL from a path (ensures no double slashes). */
 export function apiUrl(path: string): string {
