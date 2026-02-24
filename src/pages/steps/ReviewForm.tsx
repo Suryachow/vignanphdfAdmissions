@@ -51,8 +51,9 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ data }) => {
             await downloadApplicationFormPDF(data);
             toast.success("Application Form downloaded successfully", { id: "pdf-gen" });
         } catch (error) {
-            console.error("PDF Generation error:", error);
-            toast.error("Failed to generate PDF. Please try again.", { id: "pdf-gen" });
+            console.error("PDF Generation error full details:", error);
+            const msg = error instanceof Error ? error.message : String(error);
+            toast.error(`Failed to generate PDF: ${msg}`, { id: "pdf-gen" });
         } finally {
             setIsDownloading(false);
         }

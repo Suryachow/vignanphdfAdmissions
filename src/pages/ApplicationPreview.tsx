@@ -44,11 +44,15 @@ function normalizeApplicationForPreview(raw: any): any {
             lastName,
             email: raw?.email,
             phone: raw?.phone,
-            ...(raw?.personal_info || {}),
+            ...(raw?.personal || raw?.personal_info || {}),
         },
-        educational_info: raw?.educational_info ?? {},
-        address_info: raw?.address_info ?? { city: raw?.campus },
+        educational_info: raw?.education || raw?.educational_info || {},
+        btech_info: raw?.btechEducation || raw?.ug_education || {},
+        mtech_info: raw?.mtechEducation || raw?.pg_education || {},
+        address_info: raw?.address || raw?.address_info || { city: raw?.campus },
         application_status: raw?.application_status ?? (raw?.applicationStatus ? { status: raw.applicationStatus } : undefined),
+        documents: raw?.documents || {},
+        exam_schedule: raw?.examSchedule || raw?.exam_schedule || {},
     };
 }
 
@@ -143,13 +147,46 @@ const ApplicationPreview: React.FC<ApplicationPreviewProps> = ({ open, onClose }
                     { label: 'Category', value: applicationData?.personal_info?.category },
                 ]} />
 
-                {/* Educational Info */}
-                <Section title="Educational Information" data={[
-                    { label: 'School Name', value: applicationData?.educational_info?.schoolName },
-                    { label: 'Board', value: applicationData?.educational_info?.board },
-                    { label: 'Percentage', value: applicationData?.educational_info?.percentage },
-                    { label: 'Passing Year', value: applicationData?.educational_info?.passingYear },
+                {/* Educational Info - 10th */}
+                <Section title="Secondary Education (Class 10)" data={[
+                    { label: 'School Name', value: applicationData?.educational_info?.sscName },
+                    { label: 'Board', value: applicationData?.educational_info?.Board },
+                    { label: 'Marks/CGPA', value: applicationData?.educational_info?.Marks },
+                    { label: 'Passing Year', value: applicationData?.educational_info?.xYearOfPassing },
                 ]} />
+
+                {/* Educational Info - 12th/Poly */}
+                <Section
+                    title={applicationData?.educational_info?.educationType === 'polytechnic' ? 'Higher Secondary (Polytechnic)' : 'Higher Secondary (Class 12)'}
+                    data={[
+                        { label: 'College Name', value: applicationData?.educational_info?.schoolName || applicationData?.educational_info?.polytechnicCollege },
+                        { label: 'Board', value: applicationData?.educational_info?.interBoard || applicationData?.educational_info?.polytechnicBoard },
+                        { label: 'Percentage', value: applicationData?.educational_info?.percentage || applicationData?.educational_info?.polytechnicPercentage },
+                        { label: 'Stream/Branch', value: applicationData?.educational_info?.interStream || applicationData?.educational_info?.polytechnicBranch },
+                    ]}
+                />
+
+                {/* UG Degree (B.Tech) */}
+                {getValue(applicationData?.btech_info?.university, '') && (
+                    <Section title="Undergraduate Degree (Graduation)" data={[
+                        { label: 'University', value: applicationData?.btech_info?.university },
+                        { label: 'College', value: applicationData?.btech_info?.college },
+                        { label: 'Specialization', value: applicationData?.btech_info?.specialization },
+                        { label: 'CGPA/Marks', value: applicationData?.btech_info?.cgpa },
+                        { label: 'Passing Year', value: applicationData?.btech_info?.yearOfPassing },
+                    ]} />
+                )}
+
+                {/* PG Degree (M.Tech) */}
+                {getValue(applicationData?.mtech_info?.university, '') && (
+                    <Section title="Postgraduate Degree (Masters)" data={[
+                        { label: 'University', value: applicationData?.mtech_info?.university },
+                        { label: 'College', value: applicationData?.mtech_info?.college },
+                        { label: 'Specialization', value: applicationData?.mtech_info?.specialization },
+                        { label: 'CGPA/Marks', value: applicationData?.mtech_info?.cgpa },
+                        { label: 'Passing Year', value: applicationData?.mtech_info?.yearOfPassing },
+                    ]} />
+                )}
 
                 {/* Address Info */}
                 <Section title="Address Information" data={[
@@ -161,28 +198,38 @@ const ApplicationPreview: React.FC<ApplicationPreviewProps> = ({ open, onClose }
                 ]} />
 
                 {/* Documents */}
-                {applicationData?.documents && (
-                    <div className="bg-gray-50 p-4 rounded-lg mt-4">
-                        <h3 className="text-lg font-semibold text-gray-800 mb-3">Submitted Documents</h3>
-                        <ul className="space-y-2">
-                            {Object.entries(applicationData.documents)
-                                .filter(([key]) => key !== 'fileTypes')
-                                .map(([docName, status]) => (
-                                    <li key={docName} className="flex items-center">
-                                        <span className={`w-3 h-3 rounded-full mr-2 ${status === 'uploaded' ? 'bg-green-500' : 'bg-gray-300'}`}></span>
-                                        <span className="text-sm capitalize">{docName.replace(/_/g, ' ')}</span>
-                                        <span className="text-xs text-gray-500 ml-2">
-                                            {status === 'uploaded' ? '(Uploaded)' : '(Pending)'}
-                                        </span>
-                                        {/* @ts-ignore */}
-                                        {applicationData.documents?.fileTypes?.[docName] && (
-                                            <span className="text-xs text-gray-400 ml-2">[{applicationData.documents.fileTypes[docName]}]</span>
-                                        )}
-                                    </li>
-                                ))}
-                        </ul>
-                    </div>
-                )}
+                {((applicationData?.documents?.files && Object.keys(applicationData.documents.files).length > 0) ||
+                    (applicationData?.documents && Object.keys(applicationData.documents).filter(k => k !== 'files' && k !== 'fileTypes').length > 0)) && (
+                        <div className="bg-gray-50 p-4 rounded-lg mt-4">
+                            <h3 className="text-lg font-semibold text-gray-800 mb-3">Submitted Documents</h3>
+                            <ul className="space-y-2">
+                                {Object.entries(applicationData.documents?.files || applicationData.documents || {})
+                                    .filter(([key]) => key !== 'files' && key !== 'fileTypes')
+                                    .map(([docKey, fileInfo]: [string, any]) => {
+                                        const fileName = typeof fileInfo === 'string' ? fileInfo : (fileInfo?.name || fileInfo?.id || 'Document');
+                                        const isUploaded = !!fileInfo;
+
+                                        return (
+                                            <li key={docKey} className="flex items-center">
+                                                <div className={`w-2 h-2 rounded-full mr-3 ${isUploaded ? 'bg-emerald-500' : 'bg-slate-300'}`}></div>
+                                                <div className="flex flex-col">
+                                                    <span className="text-xs font-bold uppercase tracking-wider text-slate-700">
+                                                        {docKey === 'ssc' ? '10th Class Memo' :
+                                                            docKey === 'inter' ? 'Intermediate Memo' :
+                                                                docKey === 'ug' ? 'UG Degree / B.Tech' :
+                                                                    docKey === 'pg' ? 'PG Degree / M.Tech' :
+                                                                        docKey.replace(/_/g, ' ')}
+                                                    </span>
+                                                    <span className="text-[10px] text-slate-500 font-medium truncate max-w-[200px]">
+                                                        {fileName}
+                                                    </span>
+                                                </div>
+                                            </li>
+                                        );
+                                    })}
+                            </ul>
+                        </div>
+                    )}
 
                 {/* Application Status */}
                 {applicationData?.application_status && (

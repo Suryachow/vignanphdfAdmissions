@@ -1,4 +1,4 @@
-import jsPDF from "jspdf";
+import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 
 /**
@@ -37,7 +37,7 @@ export interface ApplicationFormData {
     };
     btechEducation?: {
         university: string;
-        collegeName: string;
+        college: string;
         degreeType: string;
         specialization: string;
         yearOfPassing: string;
@@ -45,7 +45,7 @@ export interface ApplicationFormData {
     };
     mtechEducation?: {
         university: string;
-        collegeName: string;
+        college: string;
         degreeType: string;
         specialization: string;
         yearOfPassing: string;
@@ -110,7 +110,7 @@ const renderTickBox = (label: string, isChecked: boolean) => {
  * Generate and download application form as PDF
  */
 export const downloadApplicationFormPDF = async (formData: any) => {
-    const appNumber = `PHD-2026-${formData.personal.phone?.slice(-4) || '0242'}`;
+    const appNumber = `PHD-2026-${formData.personal?.phone?.slice(-4) || '0242'}`;
     const fileName = `Application_Form_${appNumber}.pdf`;
     const generationDate = new Date().toLocaleDateString('en-IN', {
         day: '2-digit',
@@ -128,34 +128,42 @@ export const downloadApplicationFormPDF = async (formData: any) => {
 
     const pdf = new jsPDF('p', 'mm', 'a4');
 
-    // Common styles
-    const styles = `
-        <style>
-            .page-container {
-                width: 210mm;
-                min-height: 297mm;
-                padding: 15mm;
-                background: #fafdef;
-                border: 4px solid #475569;
-                box-sizing: border-box;
-                font-family: 'Inter', sans-serif, Arial;
-                position: relative;
-            }
-            .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #cbd5e1; padding-bottom: 20px; margin-bottom: 20px; }
-            .branding h1 { color: #b91c1c; font-size: 32px; font-weight: 900; text-transform: uppercase; font-style: italic; margin: 0; text-align: center; }
-            .branding p { font-size: 8px; font-weight: 700; color: #475569; text-transform: uppercase; margin: 2px 0; text-align: center; }
-            .section-title { font-size: 11px; font-weight: 900; color: #004C91; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; }
-            .edu-header { font-size: 9px; font-weight: 900; color: #94a3b8; text-transform: uppercase; margin-bottom: 10px; border-left: 4px solid #cbd5e1; padding-left: 8px; }
-            .field-label { font-size: 9px; font-weight: 900; color: #004C91; text-transform: uppercase; margin-bottom: 6px; }
-            .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-            .instruction-banner { background: #8BB723; color: white; padding: 10px; text-align: center; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 25px; }
-            .signature-box { width: 180px; height: 70px; border: 1.5px solid #e2e8f0; background: #f8fafc; display: flex; align-items: center; justify-content: center; font-size: 9px; color: #cbd5e1; font-weight: 700; }
-        </style>
+    // Dedicated styles using safe hex colors for the PDF
+    const pdfStyles = `
+        .page-container {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 15mm;
+            background: #fafdef;
+            border: 4px solid #475569;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif, Arial;
+            position: relative;
+            color: #1e293b;
+        }
+        .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #cbd5e1; padding-bottom: 20px; margin-bottom: 20px; }
+        .branding h1 { color: #b91c1c; font-size: 32px; font-weight: 900; text-transform: uppercase; font-style: italic; margin: 0; text-align: center; }
+        .branding p { font-size: 8px; font-weight: 700; color: #475569; text-transform: uppercase; margin: 2px 0; text-align: center; }
+        .section-title { font-size: 11px; font-weight: 900; color: #004C91; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; }
+        .edu-header { font-size: 9px; font-weight: 900; color: #94a3b8; text-transform: uppercase; margin-bottom: 10px; border-left: 4px solid #cbd5e1; padding-left: 8px; }
+        .field-label { font-size: 9px; font-weight: 900; color: #004C91; text-transform: uppercase; margin-bottom: 6px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .instruction-banner { background: #8BB723; color: white; padding: 10px; text-align: center; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 25px; }
+        .signature-box { width: 180px; height: 70px; border: 1.5px solid #e2e8f0; background: #f8fafc; display: flex; align-items: center; justify-content: center; font-size: 9px; color: #cbd5e1; font-weight: 700; }
+        .doc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .doc-item { padding: 8px; border: 1px solid #e2e8f0; background: white; border-radius: 6px; display: flex; align-items: center; gap: 10px; }
+        .doc-dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; flex-shrink: 0; }
+        .doc-label { font-size: 7px; font-weight: 900; color: #94a3b8; text-transform: uppercase; }
+        .doc-name { font-size: 9px; font-weight: 700; color: #334155; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     `;
 
-    // PAGE 1 CONTENT
-    const page1 = document.createElement('div');
-    page1.innerHTML = `
+    try {
+        // Common styles (now managed via onclone)
+        const styles = `<style>${pdfStyles}</style>`;
+
+        // PAGE 1 CONTENT
+        const page1 = document.createElement('div');
+        page1.innerHTML = `
         ${styles}
         <div class="page-container">
             <div style="position: absolute; left: 10px; bottom: 40px; transform: rotate(-90deg); transform-origin: left bottom; font-size: 14px; font-weight: 900; color: #cbd5e1; letter-spacing: 15px; opacity: 0.3;">PHD-ADMISSION 2026</div>
@@ -267,19 +275,32 @@ export const downloadApplicationFormPDF = async (formData: any) => {
             <div style="margin-top: auto; padding-top: 20px; text-align: right; font-size: 8px; font-weight: 700; color: #94a3b8;">PAGE 1 / 2</div>
         </div>
     `;
-    container.appendChild(page1);
+        container.appendChild(page1);
 
-    const canvas1 = await html2canvas(page1, { scale: 2, useCORS: true, logging: false });
-    const imgData1 = canvas1.toDataURL('image/png');
-    pdf.addImage(imgData1, 'PNG', 0, 0, 210, 297);
+        const canvas1 = await html2canvas(page1, {
+            scale: 2,
+            useCORS: true,
+            logging: false,
+            onclone: (clonedDoc) => {
+                // IMPORTANT: Remove all external stylesheets from the clone to avoid oklch parse errors
+                const stylesheets = clonedDoc.querySelectorAll('style, link[rel="stylesheet"]');
+                stylesheets.forEach(s => s.remove());
+                // Inject ONLY safe styles
+                const styleTag = clonedDoc.createElement('style');
+                styleTag.innerHTML = pdfStyles;
+                clonedDoc.head.appendChild(styleTag);
+            }
+        });
+        const imgData1 = canvas1.toDataURL('image/png');
+        pdf.addImage(imgData1, 'PNG', 0, 0, 210, 297);
 
-    container.removeChild(page1);
+        container.removeChild(page1);
 
-    const isPolytechnic = formData.education?.educationType === "polytechnic";
+        const isPolytechnic = formData.education?.educationType === "polytechnic";
 
-    // PAGE 2 CONTENT
-    const page2 = document.createElement('div');
-    page2.innerHTML = `
+        // PAGE 2 CONTENT
+        const page2 = document.createElement('div');
+        page2.innerHTML = `
         ${styles}
         <div class="page-container">
             <div style="position: absolute; left: 10px; bottom: 40px; transform: rotate(-90deg); transform-origin: left bottom; font-size: 14px; font-weight: 900; color: #cbd5e1; letter-spacing: 15px; opacity: 0.3;">PHD-ADMISSION 2026</div>
@@ -332,7 +353,7 @@ export const downloadApplicationFormPDF = async (formData: any) => {
                 <div class="grid-2">
                     <div>
                         <div class="field-label" style="font-size: 8px;">College / Degree</div>
-                        ${renderLetterBoxes((formData.btechEducation.collegeName || "").trim())}
+                        ${renderLetterBoxes((formData.btechEducation.college || "").trim())}
                     </div>
                     <div>
                         <div class="field-label" style="font-size: 8px;">Year / CGPA</div>
@@ -348,6 +369,10 @@ export const downloadApplicationFormPDF = async (formData: any) => {
                 <div class="field-group" style="margin-bottom: 12px;">
                     <div class="field-label" style="font-size: 8px;">University Name</div>
                     ${renderLetterBoxes((formData.mtechEducation.university || "").trim())}
+                </div>
+                <div class="field-group" style="margin-bottom: 12px;">
+                    <div class="field-label" style="font-size: 8px;">College Name</div>
+                    ${renderLetterBoxes((formData.mtechEducation.college || "").trim())}
                 </div>
                 <div class="grid-2">
                     <div>
@@ -390,25 +415,65 @@ export const downloadApplicationFormPDF = async (formData: any) => {
                 </div>
             </div>
 
-            <div style="margin-top: 60px; text-align: center; font-size: 9px; font-weight: 700; color: #94a3b8; letter-spacing: 2px;">
+            ${formData.documents?.files && Object.keys(formData.documents.files).length > 0 ? `
+            <div style="margin-top: 25px; padding-top: 15px; border-top: 1.5px dashed #cbd5e1; display: block;">
+                <div class="section-title">11. Documents Uploaded</div>
+                <div class="doc-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    ${Object.entries(formData.documents.files).map(([key, file]: [string, any]) => `
+                        <div class="doc-item" style="display: flex; align-items: center;">
+                            <div class="doc-dot"></div>
+                            <div style="flex: 1; overflow: hidden; margin-left: 10px;">
+                                <div class="doc-label">
+                                    ${key === 'ssc' ? '10th Class Memo' :
+                key === 'inter' ? 'Intermediate Memo' :
+                    key === 'ug' ? 'UG Degree / B.Tech' :
+                        key === 'pg' ? 'PG Degree / M.Tech' : 'Additional Document'}
+                                </div>
+                                <div class="doc-name" style="width: 100%;">${file.name}</div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+            ` : ''}
+
+            <div style="margin-top: 30px; text-align: center; font-size: 9px; font-weight: 700; color: #94a3b8; letter-spacing: 2px;">
                 PHD ADMISSION 2026 • VIGNAN DEEMED TO BE UNIVERSITY • ADMISSIONS OFFICE
             </div>
             
             <div style="margin-top: auto; padding-top: 20px; text-align: right; font-size: 8px; font-weight: 700; color: #94a3b8;">PAGE 2 / 2</div>
         </div>
     `;
-    container.appendChild(page2);
+        container.appendChild(page2);
 
-    const canvas2 = await html2canvas(page2, { scale: 2, useCORS: true, logging: false });
-    const imgData2 = canvas2.toDataURL('image/png');
-    pdf.addPage();
-    pdf.addImage(imgData2, 'PNG', 0, 0, 210, 297);
+        const canvas2 = await html2canvas(page2, {
+            scale: 2,
+            useCORS: true,
+            logging: false,
+            onclone: (clonedDoc) => {
+                // IMPORTANT: Remove all external stylesheets from the clone to avoid oklch parse errors
+                const stylesheets = clonedDoc.querySelectorAll('style, link[rel="stylesheet"]');
+                stylesheets.forEach(s => s.remove());
+                // Inject ONLY safe styles
+                const styleTag = clonedDoc.createElement('style');
+                styleTag.innerHTML = pdfStyles;
+                clonedDoc.head.appendChild(styleTag);
+            }
+        });
+        const imgData2 = canvas2.toDataURL('image/png');
+        pdf.addPage();
+        pdf.addImage(imgData2, 'PNG', 0, 0, 210, 297);
 
-    // Cleanup
-    document.body.removeChild(container);
-
-    // Direct Download
-    pdf.save(fileName);
+        // Direct Download
+        pdf.save(fileName);
+    } catch (error) {
+        console.error("PDF generation failed:", error);
+        throw error;
+    } finally {
+        if (container.parentNode) {
+            container.parentNode.removeChild(container);
+        }
+    }
 };
 
 /**

@@ -98,12 +98,31 @@ export function StudentLogin() {
         const email = formData.email.trim()
         const doRegister = async () => {
             await recordPhase("registration", email, formData.phone)
-            // Simulated backend call logic here
+
+            const res = await fetch(apiUrl("/api/student/register"), {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    full_name: formData.fullName,
+                    email: email,
+                    phone: formData.phone,
+                    campus: formData.campus,
+                    program: formData.program,
+                    specialization: formData.specialization
+                }),
+            })
+
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({}))
+                throw new Error(err?.detail || "Registration failed")
+            }
+
+            return await res.json()
         }
 
         toast.promise(doRegister(), {
             loading: "Creating your profile...",
-            success: () => {
+            success: (data) => {
                 completeRegistration()
                 authLogin({
                     name: formData.fullName,
@@ -111,11 +130,14 @@ export function StudentLogin() {
                     phone: formData.phone,
                     status: "registered",
                     program: formData.program,
+                    application_status: "locked",
+                    payment_status: "pending",
+                    id: data.id
                 })
                 navigate("/application")
                 return "Registration successful!"
             },
-            error: "Registration failed.",
+            error: (err) => err.message || "Registration failed.",
         })
     }
 
@@ -176,6 +198,9 @@ export function StudentLogin() {
                 phone: leadUser.phone,
                 status: "logged_in",
                 program: leadUser.program,
+                application_status: leadUser.application_status,
+                payment_status: leadUser.payment_status,
+                id: leadUser.id
             })
 
             toast.success("Login successful!")

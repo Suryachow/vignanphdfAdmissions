@@ -7,7 +7,9 @@ interface User {
     phone?: string;
     status: string;
     program?: string;
-    // Add other fields as needed
+    application_status?: string;
+    payment_status?: string;
+    id?: number;
 }
 
 interface AuthContextType {

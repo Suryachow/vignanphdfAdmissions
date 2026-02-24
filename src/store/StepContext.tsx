@@ -51,53 +51,61 @@ export const StepProvider: React.FC<{ children: React.ReactNode }> = ({ children
         localStorage.setItem('vignan_student_steps', JSON.stringify(steps))
     }, [steps])
 
-    const setOtpVerified = (val: boolean) => {
+    const setOtpVerified = React.useCallback((val: boolean) => {
         setSteps(prev => ({ ...prev, otpVerified: val }))
-    }
+    }, [])
 
-    const setPaymentStatus = (status: 'failed' | 'pending' | 'success') => {
+    const setPaymentStatus = React.useCallback((status: 'failed' | 'pending' | 'success') => {
         setSteps(prev => ({
             ...prev,
             payment: status,
             application: status === 'success' || status === 'failed' ? 'current' : 'locked',
         }))
-    }
+    }, [])
 
-    const completeRegistration = () => {
+    const completeRegistration = React.useCallback(() => {
         setSteps(prev => ({ ...prev, registration: 'completed', login: 'current' }))
-    }
+    }, [])
 
-    const completeLogin = () => {
+    const completeLogin = React.useCallback(() => {
         setSteps(prev => ({ ...prev, login: 'completed', payment: 'current' }))
-    }
+    }, [])
 
-    const completeApplication = () => {
+    const completeApplication = React.useCallback(() => {
         setSteps(prev => ({ ...prev, application: 'completed' }))
-    }
+    }, [])
 
-    const logout = () => {
+    const logout = React.useCallback(() => {
         setSteps({ ...defaultSteps })
         localStorage.removeItem('vignan_student_steps')
-    }
+    }, [])
 
-    const canAccess = (_route: string) => {
-        // Bypassed: always allow access
+    const canAccess = React.useCallback((_route: string) => {
         return true
-    }
+    }, [])
+
+    const value = React.useMemo(() => ({
+        steps,
+        setOtpVerified,
+        setPaymentStatus,
+        completeRegistration,
+        completeLogin,
+        completeApplication,
+        canAccess,
+        logout,
+    }), [
+        steps,
+        setOtpVerified,
+        setPaymentStatus,
+        completeRegistration,
+        completeLogin,
+        completeApplication,
+        canAccess,
+        logout,
+    ])
 
     return (
-        <StepContext.Provider
-            value={{
-                steps,
-                setOtpVerified,
-                setPaymentStatus,
-                completeRegistration,
-                completeLogin,
-                completeApplication,
-                canAccess,
-                logout,
-            }}
-        >
+        <StepContext.Provider value={value}>
             {children}
         </StepContext.Provider>
     )

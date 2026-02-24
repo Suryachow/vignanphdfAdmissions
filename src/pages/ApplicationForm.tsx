@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
     User,
     GraduationCap,
@@ -51,7 +51,7 @@ function getStepDataForCache(
     if (!name) return formData;
     switch (name) {
         case "Payment":
-            return { payment: formData.payment || {} };
+            return formData.payment || {};
         case "Personal Info":
             return { personal: formData.personal || {}, address: formData.address || {} };
         case "Education":
@@ -59,6 +59,7 @@ function getStepDataForCache(
                 education: formData.education || {},
                 btechEducation: formData.btechEducation || {},
                 mtechEducation: formData.mtechEducation || {},
+                documents: formData.documents || {},
             };
 
         case "Exam Schedule":
@@ -177,8 +178,10 @@ async function cacheStepData(
             try {
                 const parsedUser = JSON.parse(userDetails);
                 const u = parsedUser?.user ?? parsedUser;
-                userPhone = u?.phone ?? "";
-                sessionId = `${parsedUser?.status ?? ""}-${u?.phone ?? ""}`;
+                const rawPhone = u?.phone ?? "";
+                // Use a clean phone for session_id consistency
+                userPhone = rawPhone.replace(/\D/g, "").slice(-10) || rawPhone;
+                sessionId = `pending-${userPhone || "guest"}`;
             } catch { }
         }
         const payload: CacheStepDataPayload = {
@@ -298,9 +301,35 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onSubmit }) => {
     const [currentUserDetails, setCurrentUserDetails] = useState<fetchUserRegistrationDetailsResponse | null>(null);
     const { steps: stepContext, setPaymentStatus, completeApplication } = useSteps();
     const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [showCompletePaymentModal, setShowCompletePaymentModal] = useState(false);
     const [isRedirectingToPay, setIsRedirectingToPay] = useState(false);
     const [justSubmitted, setJustSubmitted] = useState(false);
+
+    // Sync URL payment status with global state
+    React.useEffect(() => {
+        const urlStatus = searchParams.get("payment");
+        if (urlStatus === "success") {
+            setPaymentStatus("success");
+            setFormData((prev: any) => ({
+                ...prev,
+                payment: { ...prev.payment, paymentStatus: "completed" }
+            }));
+            toast.success("Payment completed successfully!");
+            searchParams.delete("payment");
+            setSearchParams(searchParams, { replace: true });
+        } else if (urlStatus === "failed") {
+            setPaymentStatus("failed");
+            setFormData((prev: any) => ({
+                ...prev,
+                payment: { ...prev.payment, paymentStatus: "failed" }
+            }));
+            toast.error("Payment was unsuccessful. Please check your bank and try again.");
+            searchParams.delete("payment");
+            setSearchParams(searchParams, { replace: true });
+        }
+    }, [searchParams, setSearchParams, setPaymentStatus]);
+
     const paymentFailed = stepContext.payment === "failed";
 
     // Generate steps based on user program
@@ -316,31 +345,120 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onSubmit }) => {
         }
     }, [stepContext.payment]);
 
-    // If student already has completed payment (transaction_id source of truth), do not ask again
+    // Unified check for payment and cache data
+    const initialFetchDone = React.useRef(false);
+
     React.useEffect(() => {
-        const email = getUserEmail().trim();
-        const phone = getUserPhone().replace(/\D/g, "").slice(-10);
-        if (!email && phone.length !== 10) return;
-        const params = new URLSearchParams();
-        if (email) params.set("email", email);
-        if (phone.length === 10) params.set("phone", phone);
-        fetch(apiUrl(`/api/student/payment-status/?${params}`))
-            .then((r) => r.json())
-            .then((data) => {
-                if (data?.hasCompletedPayment && data?.transactionId) {
-                    setPaymentStatus("success");
-                    setFormData((prev: any) => ({
-                        ...prev,
-                        payment: {
-                            ...prev.payment,
-                            paymentStatus: "completed",
-                            transactionId: data.transactionId,
-                        },
-                    }));
+        if (initialFetchDone.current) return;
+        initialFetchDone.current = true;
+
+        const fetchData = async () => {
+            try {
+                const email = getUserEmail().trim();
+                const decoded = getUserPhone();
+                const phone = decoded.replace(/\D/g, "").slice(-10);
+
+                if (!email && phone.length !== 10) return;
+
+                // 1. Check Payment Status
+                const params = new URLSearchParams();
+                if (email) params.set("email", email);
+                if (phone.length === 10) params.set("phone", phone);
+
+                const statusRes = await fetch(apiUrl(`/api/student/payment-status/?${params}`));
+                let paymentStatusFromBackend: "completed" | "pending" = "pending";
+                let transactionIdFromBackend: string | undefined;
+
+                if (statusRes.ok) {
+                    const statusData = await statusRes.json();
+                    if (statusData?.hasCompletedPayment && statusData?.transactionId) {
+                        paymentStatusFromBackend = "completed";
+                        transactionIdFromBackend = statusData.transactionId;
+
+                        // Only update global state if it's not already success
+                        if (stepContext.payment !== 'success') {
+                            setPaymentStatus("success");
+                        }
+                    }
                 }
-            })
-            .catch(() => { });
-    }, [setPaymentStatus]);
+
+                // 2. Fetch Cached Application Data
+                const res = await fetch(apiUrl("/api/step/cache/"));
+                if (res.ok) {
+                    const data = await res.json();
+                    const allApplications = data?.cached_applications || [];
+                    const sessionId = `pending-${phone || decoded || "guest"}`;
+                    const app: CachedApplication | null = allApplications.find(
+                        (application: any) => application.session_id === sessionId
+                    ) || null;
+
+                    if (app) {
+                        const stepsObj = app.steps || {};
+                        const personal = stepsObj?.personal_info?.personal || app.personal || {};
+                        const address = stepsObj?.personal_info?.address || app.address || {};
+                        const education = stepsObj?.education?.education ?? stepsObj?.personal_info?.education ?? app.education ?? {};
+                        const btechEducation = stepsObj?.education?.btechEducation ?? app.btechEducation ?? {};
+                        const mtechEducation = stepsObj?.education?.mtechEducation ?? app.mtechEducation ?? {};
+                        const examSchedule = stepsObj?.exam_schedule?.examSchedule ?? stepsObj?.examSchedule ?? app.examSchedule ?? {};
+                        const rawPaymentFromCache = stepsObj?.payment || stepsObj?.personal_info?.payment || app.payment || {};
+                        // Safely unwrap if nested due to previous bugs
+                        const paymentFromCache = (rawPaymentFromCache.payment && typeof rawPaymentFromCache.payment === 'object' && !Array.isArray(rawPaymentFromCache.payment))
+                            ? rawPaymentFromCache.payment
+                            : rawPaymentFromCache;
+
+                        const payment = paymentStatusFromBackend === "completed"
+                            ? { ...paymentFromCache, paymentStatus: "completed" as const, transactionId: transactionIdFromBackend }
+                            : { ...paymentFromCache, paymentStatus: "pending" as const };
+
+                        setFormData((prev: any) => ({
+                            ...prev,
+                            personal: { ...prev.personal, ...personal },
+                            address: { ...prev.address, ...address },
+                            education: { ...prev.education, ...education },
+                            btechEducation: { ...prev.btechEducation, ...btechEducation },
+                            mtechEducation: { ...prev.mtechEducation, ...mtechEducation },
+                            payment: { ...prev.payment, ...payment },
+                            examSchedule: { ...prev.examSchedule, ...examSchedule },
+                            documents: { ...prev.documents, ...(stepsObj?.documents || app.documents || {}) },
+                        }));
+
+                        const appWithPayment = paymentStatusFromBackend === "completed"
+                            ? { ...app, payment: { ...paymentFromCache, paymentStatus: "completed" } }
+                            : null;
+                        const last = appWithPayment ? getLastCompletedStep(appWithPayment) : 1;
+                        setCurrentStep(last > 1 ? last : 1);
+                    }
+                }
+
+                // 3. Fetch Submitted Application Data (Priority if submitted)
+                const appRes = await fetch(apiUrl(`/api/applications/?phone=${phone}`));
+                if (appRes.ok) {
+                    const appData = await appRes.json();
+                    if (appData && appData.status) {
+                        setFormData((prev: any) => ({
+                            ...prev,
+                            personal: { ...prev.personal, ...(appData.personal || {}) },
+                            address: { ...prev.address, ...(appData.address || {}) },
+                            education: { ...prev.education, ...(appData.education || {}) },
+                            btechEducation: { ...prev.btechEducation, ...(appData.btechEducation || {}) },
+                            mtechEducation: { ...prev.mtechEducation, ...(appData.mtechEducation || {}) },
+                            documents: { ...prev.documents, ...(appData.documents || {}) },
+                            examSchedule: { ...prev.examSchedule, ...(appData.examSchedule || {}) },
+                        }));
+
+                        // If fully submitted, we might want to stay on the final step or review
+                        if (appData.status === "SUBMITTED" || appData.status === "completed") {
+                            setCurrentStep(steps.length);
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error("Failed to fetch initial application data", e);
+            }
+        };
+
+        fetchData();
+    }, [steps]); // Add steps to dependency to ensure correct step indexing
 
     // Fetch user details locally
     React.useEffect(() => {
@@ -538,78 +656,6 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onSubmit }) => {
         // The original code had detailed checks. For brevity, assuming user starts where they left off if we fetched from backend.
     };
 
-    // Fetch cached data from backend; payment status is only trusted from backend (payment-status API), not from cache
-    React.useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const decoded = getUserPhone();
-                const email = getUserEmail().trim();
-                const phone = decoded.replace(/\D/g, "").slice(-10);
-                const res = await fetch(apiUrl("/api/step/cache/"));
-                if (res.ok) {
-                    const data = await res.json();
-                    const allApplications = data?.cached_applications || [];
-                    const sessionId = `pending-${decoded}`;
-                    const app: CachedApplication | null = allApplications.find(
-                        (application: any) => application.session_id === sessionId
-                    ) || null;
-
-                    if (app) {
-                        const stepsObj = app.steps || {};
-                        const personal = stepsObj?.personal_info?.personal || app.personal || {};
-                        const address = stepsObj?.personal_info?.address || app.address || {};
-                        const education = stepsObj?.education?.education ?? stepsObj?.personal_info?.education ?? app.education ?? {};
-                        const btechEducation = stepsObj?.education?.btechEducation ?? app.btechEducation ?? {};
-                        const mtechEducation = stepsObj?.education?.mtechEducation ?? app.mtechEducation ?? {};
-                        const examSchedule = stepsObj?.exam_schedule?.examSchedule ?? stepsObj?.examSchedule ?? app.examSchedule ?? {};
-                        const paymentFromCache = stepsObj?.payment || stepsObj?.personal_info?.payment || app.payment || {};
-
-                        // Verify payment with backend; do not trust cache for payment status
-                        let paymentStatusFromBackend: "completed" | "pending" = "pending";
-                        let transactionIdFromBackend: string | undefined;
-                        if (email || phone.length === 10) {
-                            const params = new URLSearchParams();
-                            if (email) params.set("email", email);
-                            if (phone.length === 10) params.set("phone", phone);
-                            const statusRes = await fetch(apiUrl(`/api/student/payment-status/?${params}`));
-                            if (statusRes.ok) {
-                                const statusData = await statusRes.json();
-                                if (statusData?.hasCompletedPayment && statusData?.transactionId) {
-                                    paymentStatusFromBackend = "completed";
-                                    transactionIdFromBackend = statusData.transactionId;
-                                }
-                            }
-                        }
-                        const payment = paymentStatusFromBackend === "completed"
-                            ? { ...paymentFromCache, paymentStatus: "completed" as const, transactionId: transactionIdFromBackend }
-                            : { ...paymentFromCache, paymentStatus: "pending" as const };
-
-                        setFormData((prev: any) => ({
-                            ...prev,
-                            personal: { ...prev.personal, ...personal },
-                            address: { ...prev.address, ...address },
-                            education: { ...prev.education, ...education },
-                            btechEducation: { ...prev.btechEducation, ...btechEducation },
-                            mtechEducation: { ...prev.mtechEducation, ...mtechEducation },
-                            payment: { ...prev.payment, ...payment },
-                            examSchedule: { ...prev.examSchedule, ...examSchedule },
-                            documents: { ...prev.documents, ...(stepsObj?.documents || app.documents || {}) },
-                        }));
-
-                        const appWithPayment = paymentStatusFromBackend === "completed"
-                            ? { ...app, payment: { ...paymentFromCache, paymentStatus: "completed" } }
-                            : null;
-                        const last = appWithPayment ? getLastCompletedStep(appWithPayment) : 1;
-                        setCurrentStep(last > 1 ? last : 1);
-                        if (paymentStatusFromBackend === "completed") setPaymentStatus("success");
-                    }
-                }
-            } catch (e) {
-                console.error("Failed to fetch cached steps", e);
-            }
-        };
-        fetchData();
-    }, [setPaymentStatus]);
 
     const handleChange = async (section: string, field: string, value: any) => {
         setFormData((prev: any) => {

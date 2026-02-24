@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
     CheckCircle, CreditCard, ShieldCheck, Lock,
-    ArrowRight, Wallet, Landmark, Info
+    ArrowRight, Wallet, Landmark, Info, XCircle, AlertCircle
 } from "lucide-react";
 import confetti from "canvas-confetti";
 import { apiUrl } from "../../lib/api";
@@ -68,22 +68,28 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ data, onChange, onPaymentSucc
                 if (result && result.records && result.records.length > 0) {
                     const payment = result.records[0];
                     const pData = payment.payment_data || {};
+                    const status = (payment.status || "").toLowerCase();
 
-                    // Update form data via the parent's onChange (section, field, value)
-                    onChange("payment", "paymentStatus", "completed");
-                    onChange("payment", "transactionId", pData.transactionId || transactionId);
-                    onChange("payment", "paymentAmount", pData.paymentAmount);
-                    onChange("payment", "paymentMethod", pData.paymentMethod || "PayU");
+                    if (status === "success" || status === "completed") {
+                        onChange("payment", "paymentStatus", "completed");
+                        onChange("payment", "transactionId", pData.transactionId || transactionId);
+                        onChange("payment", "paymentAmount", pData.paymentAmount);
+                        onChange("payment", "paymentMethod", pData.paymentMethod || "PayU");
 
-                    setPaymentStatus('success');
-                    recordPhase("payment", user?.email, user?.phone);
+                        setPaymentStatus('success');
+                        recordPhase("payment", user?.email, user?.phone);
 
-                    confetti({
-                        particleCount: 150,
-                        spread: 70,
-                        origin: { y: 0.6 },
-                        colors: ['#1e3a8a', '#10b981', '#ffffff']
-                    });
+                        confetti({
+                            particleCount: 150,
+                            spread: 70,
+                            origin: { y: 0.6 },
+                            colors: ['#1e3a8a', '#10b981', '#ffffff']
+                        });
+                    } else if (status === "failure" || status === "failed") {
+                        onChange("payment", "paymentStatus", "failed");
+                        onChange("payment", "errorMessage", pData.errorMessage || "Transaction failed");
+                        setPaymentStatus('failed');
+                    }
                 }
             }
         } catch (err) {
@@ -223,6 +229,39 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ data, onChange, onPaymentSucc
         { id: "debit", name: "Debit Card", icon: CreditCard, description: "Visa, Mastercard, RuPay supported" }
     ];
 
+    if (data.paymentStatus === "failed") {
+        return (
+            <div className="max-w-4xl mx-auto py-12 px-4 animate-in fade-in duration-700">
+                <div className="bg-white border border-rose-200 rounded-3xl p-12 text-center shadow-lg shadow-rose-100">
+                    <div className="w-20 h-20 bg-rose-50 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <XCircle className="h-10 w-10" />
+                    </div>
+                    <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight">Payment Failed</h2>
+                    <p className="text-slate-500 mb-10 max-w-md mx-auto">
+                        Unfortunately, your transaction could not be processed. {data.errorMessage || "The payment was rejected by your bank or the gateway. Please try again or use a different payment method."}
+                    </p>
+
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                        <button
+                            onClick={() => {
+                                onChange("payment", "paymentStatus", "pending");
+                                setPaymentStatus('pending');
+                            }}
+                            className="bg-slate-900 text-white font-black py-4 px-10 rounded-2xl hover:bg-slate-800 transition-all flex items-center justify-center gap-3 uppercase tracking-widest text-xs shadow-xl shadow-slate-200"
+                        >
+                            <ArrowRight className="h-4 w-4 rotate-180" />
+                            Retry Payment
+                        </button>
+                        <div className="flex items-center gap-2 text-slate-400 px-6 py-4 justify-center">
+                            <AlertCircle className="h-4 w-4 text-rose-400" />
+                            <span className="text-[10px] uppercase font-bold tracking-widest leading-none">ID: {data.transactionId || 'N/A'}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     if (data.paymentStatus === "completed") {
         return (
             <div className="max-w-4xl mx-auto py-12 px-4 animate-in fade-in duration-700">
@@ -231,18 +270,27 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ data, onChange, onPaymentSucc
                         <CheckCircle className="h-10 w-10" />
                     </div>
                     <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight">Payment Successful</h2>
-                    <p className="text-slate-500 mb-10 max-w-sm mx-auto">Your admission application fee has been processed securely. We've sent a receipt to your email.</p>
+                    <p className="text-slate-500 mb-10 max-w-sm mx-auto">
+                        Your admission application fee has been processed securely{data.paymentMethod === 'PayU' ? ' via PayU' : data.paymentMethod ? ` via ${data.paymentMethod}` : ''}. We've sent a receipt to your email.
+                    </p>
 
                     <div className="grid grid-cols-2 gap-8 text-left border-t border-slate-100 pt-10">
                         <div>
                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Transaction ID</p>
-                            <p className="font-bold text-slate-900 font-mono">{data.transactionId}</p>
+                            <p className="font-bold text-slate-900 font-mono text-sm">{data.transactionId}</p>
                         </div>
                         <div>
                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Amount Paid</p>
-                            <p className="font-bold text-slate-900">₹{data.paymentAmount || data.amount}.00</p>
+                            <p className="font-bold text-slate-900 text-sm">₹{data.paymentAmount || data.amount}.00</p>
                         </div>
                     </div>
+
+                    {data.paymentMethod === 'PayU' && (
+                        <div className="mt-8 flex items-center justify-center gap-2 opacity-30 grayscale grayscale-100">
+                            <img src="https://www.payu.in/wp-content/uploads/2023/11/payu_logo.png" alt="PayU" className="h-3" />
+                            <span className="text-[8px] font-bold uppercase tracking-widest text-slate-400">Verified Secure</span>
+                        </div>
+                    )}
                 </div>
             </div>
         );
@@ -434,6 +482,10 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ data, onChange, onPaymentSucc
                                     onChange("payment", "paymentAmount", Math.max(0, baseAmount - discount));
                                     onChange("payment", "paymentMethod", "Test Bypass");
                                     if (onPaymentSuccess) onPaymentSuccess("paymentStatus", "completed");
+
+                                    // CRITICAL: Update global step context so other parts of the app know payment is done
+                                    setPaymentStatus('success');
+
                                     setIsProcessing(false);
                                     toast.success("Test Payment Bypassed Successfully!");
                                     confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#1e3a8a', '#10b981', '#ffffff'] });

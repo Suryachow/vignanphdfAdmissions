@@ -29,7 +29,7 @@ export function StudentLayout() {
     const handleLogout = () => {
         logoutAuth(); // Logout from AuthContext
         logoutSteps(); // Reset steps found in StepContext
-        navigate("/login");
+        navigate("/");
     }
 
     return (

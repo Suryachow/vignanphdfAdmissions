@@ -14,14 +14,41 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { cn } from '../lib/utils';
+import { apiUrl } from '../lib/api';
 
 export const StudentDashboard: React.FC = () => {
     const navigate = useNavigate();
     const [showPreview, setShowPreview] = useState(false);
     const { user } = useAuth();
+    const [appData, setAppData] = useState<any>(null);
 
-    // Mock step - usually this comes from backend
-    const currentStep = 1;
+    // Fetch actual status from backend
+    React.useEffect(() => {
+        const fetchStatus = async () => {
+            if (!user?.email) return;
+            try {
+                const res = await fetch(apiUrl(`/api/applications/?email=${encodeURIComponent(user.email)}`));
+                if (res.ok) {
+                    const data = await res.json();
+                    setAppData(data);
+                }
+            } catch (err) {
+                console.error("Dashboard fetch error:", err);
+            }
+        };
+        fetchStatus();
+    }, [user]);
+
+    // Map status to current step index (1-based)
+    const currentStep = React.useMemo(() => {
+        if (!appData) return 1;
+        const status = appData.status?.toLowerCase() || "";
+        const userStatus = user?.application_status || "";
+
+        if (status === "submitted" || userStatus === "completed") return 2;
+        if (status === "approved") return 3;
+        return 1;
+    }, [appData, user]);
 
     const steps = [
         { name: 'Application', icon: FileText },
