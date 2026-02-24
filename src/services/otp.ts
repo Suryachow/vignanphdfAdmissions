@@ -9,7 +9,7 @@ export type OtpChannel = "email"
  * Send OTP via current FastAPI backend only.
  * Backend: SMTP for email; storage in backend DB.
  */
-export async function sendOtp(channel: OtpChannel, value: string): Promise<{ success: boolean; message?: string }> {
+export async function sendOtp(channel: OtpChannel, value: string, phone?: string, purpose?: string): Promise<{ success: boolean; message?: string }> {
     const trimmed = String(value).trim()
     if (!trimmed || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
         return { success: false, message: "Valid email required" }
@@ -19,7 +19,7 @@ export async function sendOtp(channel: OtpChannel, value: string): Promise<{ suc
         const res = await fetch(apiUrl("/api/otp/send"), {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ type: channel, email: trimmed }),
+            body: JSON.stringify({ type: channel, email: trimmed, phone: phone || null, purpose: purpose || null }),
         })
         const data = await res.json().catch(() => ({}))
         if (!res.ok) return { success: false, message: (data?.detail ?? "Failed to send OTP") as string }

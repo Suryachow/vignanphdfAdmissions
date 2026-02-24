@@ -66,7 +66,8 @@ export function StudentLogin() {
             toast.error("Please enter a valid email address")
             return
         }
-        const result = await sendOtp("email", email)
+        const phoneNum = formData.phone ? formData.phone.replace(/\D/g, "").slice(-10) : ""
+        const result = await sendOtp("email", email, phoneNum, "Registration Verification")
         if (!result.success) {
             toast.error(result.message)
             return
