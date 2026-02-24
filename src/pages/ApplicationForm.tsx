@@ -118,7 +118,6 @@ function validateStepFields(
                 if (!filled(e.schoolName)) return "Please enter intermediate/12th college name.";
                 if (!filled(e.interBoard)) return "Please select intermediate board.";
                 if (!filled(e.interStream)) return "Please select stream/group.";
-                if (!filled(e.rollNumber)) return "Please enter hall ticket number.";
                 if (!filled(e.interMarks)) return "Please enter intermediate total marks.";
                 if (!filled(e.percentage)) return "Please enter intermediate percentage.";
             } else {

@@ -149,7 +149,6 @@ const ApplicationPreview: React.FC<ApplicationPreviewProps> = ({ open, onClose }
                     { label: 'Board', value: applicationData?.educational_info?.board },
                     { label: 'Percentage', value: applicationData?.educational_info?.percentage },
                     { label: 'Passing Year', value: applicationData?.educational_info?.passingYear },
-                    { label: 'Roll Number', value: applicationData?.educational_info?.rollNumber },
                 ]} />
 
                 {/* Address Info */}

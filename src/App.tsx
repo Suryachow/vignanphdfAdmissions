@@ -20,6 +20,7 @@ const StudentDashboard = lazy(() => import("./pages/StudentDashboard"))
 const StudentProfile = lazy(() => import("./pages/StudentProfile"))
 const Messages = lazy(() => import("./pages/Messages"))
 const StudentLayout = lazy(() => import("./layouts/StudentLayout").then(m => ({ default: m.StudentLayout })))
+const Landing = lazy(() => import("./pages/Landing").then(m => ({ default: m.Landing })))
 
 // ─── Page-level loading spinner ──────────────────────────────────────────
 function PageLoader() {
@@ -94,6 +95,7 @@ function App() {
               <Suspense fallback={<PageLoader />}>
                 <Routes>
                   {/* Public */}
+                  <Route path="/" element={<Landing />} />
                   <Route path="/register" element={<Registration />} />
                   <Route path="/login" element={<StudentLogin />} />
 
@@ -137,8 +139,7 @@ function App() {
                   </Route>
 
                   {/* Root fallback */}
-                  <Route path="/" element={<Navigate to="/register" replace />} />
-                  <Route path="*" element={<Navigate to="/register" replace />} />
+                  <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
               </Suspense>
             </StepProvider>

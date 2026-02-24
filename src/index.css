@@ -1,102 +1,79 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Libre Baskerville", serif;
 
-  --color-primary: #1e3a8a;
-  --color-primary-hover: #172554;
-  --color-primary-foreground: #ffffff;
+  --color-vignan-maroon: #8B230B;
+  --color-vignan-blue: #012B6B;
+  --color-vignan-gold: #D4AF37;
 
-  --color-secondary: #f1f5f9;
-  --color-secondary-foreground: #1e293b;
+  --color-background: #FFFFFF;
+  --color-foreground: #1E293B;
 
-  --color-accent: #10b981;
-  --color-accent-foreground: #ffffff;
-
-  --color-background: #f8fafc;
-  --color-foreground: #020617;
-
-  --color-card: #ffffff;
-  --color-card-foreground: #020617;
-
-  --color-muted: #f1f5f9;
-  --color-muted-foreground: #64748b;
-
-  --color-border: #e2e8f0;
-  --color-input: #e2e8f0;
-
-  --radius-xl: 1rem;
-  --radius-lg: 0.75rem;
-  --radius-md: 0.5rem;
-  --radius-sm: 0.25rem;
+  --shadow-card: 0 30px 60px rgba(0, 0, 0, 0.12);
+  --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
-
   body {
-    @apply bg-background text-foreground font-sans antialiased;
-    background-image:
-      radial-gradient(at 0% 0%, hsla(221, 83%, 33%, 0.05) 0px, transparent 50%),
-      radial-gradient(at 100% 0%, hsla(158, 64%, 42%, 0.05) 0px, transparent 50%);
-    background-attachment: fixed;
+    @apply bg-slate-50 text-slate-800 font-sans antialiased;
   }
 }
 
 @layer components {
-  .glass {
-    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-xl;
+  .vignan-header {
+    @apply bg-white/90 backdrop-blur-xl border-b border-white/20 sticky top-0 z-[100] shadow-sm transition-all;
   }
 
-  .premium-card {
-    @apply transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 bg-white border border-slate-100;
+  .vignan-nav-link {
+    @apply text-sm font-semibold text-slate-700 hover:text-vignan-maroon transition-colors px-4 py-2 rounded-full hover:bg-vignan-maroon/5;
   }
 
-  .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent font-bold;
+  .vignan-hero-text {
+    @apply font-serif text-white text-5xl md:text-6xl lg:text-7xl font-bold leading-tight drop-shadow-2xl;
   }
 
-  .btn-premium {
-    @apply relative overflow-hidden transition-all duration-300 active:scale-95 hover:shadow-lg hover:shadow-primary/20;
+  .vignan-form-card {
+    @apply bg-white/95 backdrop-blur-2xl rounded-3xl shadow-card overflow-hidden border border-white p-8 md:p-10 relative;
+  }
+
+  .vignan-input {
+    @apply w-full bg-slate-50/50 border border-slate-200 rounded-xl px-5 py-3.5 text-sm focus:bg-white focus:border-vignan-maroon focus:ring-4 focus:ring-vignan-maroon/10 outline-none transition-all placeholder:text-slate-400 font-medium text-slate-700;
+  }
+
+  .vignan-btn {
+    @apply bg-gradient-to-r from-vignan-maroon to-[#7A1E09] hover:from-red-900 hover:to-vignan-maroon text-white font-bold py-4 px-8 rounded-xl transition-all shadow-lg shadow-vignan-maroon/30 flex items-center justify-center gap-2 text-sm uppercase tracking-[0.15em] border border-white/10;
+  }
+
+  .vignan-btn-secondary {
+    @apply border-2 border-vignan-maroon text-vignan-maroon hover:bg-vignan-maroon hover:text-white font-bold py-3.5 px-8 rounded-xl transition-all text-sm uppercase tracking-wider shadow-sm;
+  }
+
+  .vignan-feature-item {
+    @apply flex items-start gap-4 p-5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all hover:-translate-y-1 shadow-glass;
   }
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
+/* Premium rich overlay blending Vignan Blue to Vignan Maroon */
+.hero-overlay {
+  background: linear-gradient(135deg, rgba(1, 43, 107, 0.85) 0%, rgba(139, 35, 11, 0.8) 100%);
 }
 
-::-webkit-scrollbar-track {
-  @apply bg-secondary;
+.shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite linear;
 }
 
-::-webkit-scrollbar-thumb {
-  @apply bg-muted-foreground/20 rounded-full hover:bg-muted-foreground/30 transition-colors;
-}
-
-/* Hero Section Layout */
-.hero-layout {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
-  align-items: center;
-}
-
-.hero-form-wrapper {
-  display: flex;
-  justify-content: center;
-}
-
-@media (min-width: 1024px) {
-  .hero-layout {
-    grid-template-columns: 3fr 2fr;
-    gap: 4rem;
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
   }
 
-  .hero-form-wrapper {
-    justify-content: flex-end;
+  100% {
+    background-position: 200% 0;
   }
 }

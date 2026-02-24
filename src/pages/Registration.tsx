@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import {
     Phone,
@@ -21,7 +20,6 @@ import { sendOtp, verifyOtp } from "../services/otp"
 import { recordPhase } from "../services/phase"
 
 export function Registration() {
-    const navigate = useNavigate()
     const { completeRegistration } = useSteps()
     const { login } = useAuth()
 
@@ -48,10 +46,20 @@ export function Registration() {
     const programOptions = {
         phd: [
             { value: "cse", label: "Computer Science & Engineering" },
-            { value: "ece", label: "Electronics & Communication" },
-            { value: "mechanical", label: "Mechanical Engineering" },
+            { value: "ece", label: "Electronics & Communication Engineering" },
+            { value: "mech", label: "Mechanical Engineering" },
             { value: "biotech", label: "Biotechnology" },
             { value: "management", label: "Management Studies" },
+            { value: "civil", label: "Civil Engineering" },
+            { value: "chemical", label: "Chemical Engineering" },
+            { value: "eee", label: "Electrical & Electronics Engineering" },
+            { value: "environmental", label: "Environmental Science" },
+            { value: "physics", label: "Physics" },
+            { value: "chemistry", label: "Chemistry" },
+            { value: "mathematics", label: "Mathematics" },
+            { value: "commerce", label: "Commerce" },
+            { value: "english", label: "English" },
+            { value: "business", label: "Business Administration" },
         ]
     }
 
@@ -86,8 +94,6 @@ export function Registration() {
         }, 500)
     }
 
-    const [registrationSuccess, setRegistrationSuccess] = useState(false)
-
     useEffect(() => {
         if (resendCooldownEmail <= 0) return
         const t = setInterval(() => setResendCooldownEmail((c) => (c <= 1 ? 0 : c - 1)), 1000)
@@ -118,7 +124,7 @@ export function Registration() {
                     status: "registered",
                     program: formData.program,
                 })
-                setRegistrationSuccess(true)
+                // registration success handled by toast + redirect flow
                 return "Thank you for registering!"
             },
             error: "Registration failed.",
@@ -130,186 +136,190 @@ export function Registration() {
             <Toaster position="top-center" richColors />
 
             {/* Hero Section */}
-            <section className="relative min-h-[90vh] flex items-center pt-20 overflow-hidden">
+            <section className="relative min-h-[92vh] flex items-center pt-20 overflow-hidden">
                 <div className="absolute inset-0 z-0">
+                    {/* High-end campus hero image (curated Unsplash) */}
                     <img
-                        src="https://images.unsplash.com/photo-1541339907198-e08756ebafe3?auto=format&fit=crop&w=2070&q=80"
-                        alt="Hero"
-                        className="w-full h-full object-cover opacity-20"
+                        src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=2070&q=80"
+                        alt="Vignan campus"
+                        className="w-full h-full object-cover opacity-12"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-tr from-white via-white/90 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-tr from-white via-white/95 to-transparent" />
+                    {/* Decorative radial gradient */}
+                    <div className="absolute -left-32 -top-24 w-96 h-96 rounded-full bg-gradient-to-tr from-primary/20 to-transparent blur-3xl opacity-90" />
+                    <div className="absolute -right-24 bottom-0 w-80 h-80 rounded-full bg-gradient-to-br from-emerald-200/20 to-transparent blur-3xl" />
                 </div>
 
-                <div className="container px-4 mx-auto relative z-10">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div className="container px-6 mx-auto relative z-10">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
                         <motion.div
-                            initial={{ opacity: 0, x: -50 }}
+                            initial={{ opacity: 0, x: -40 }}
                             animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.8 }}
+                            transition={{ duration: 0.9 }}
                             className="space-y-8 text-left"
                         >
-                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-black uppercase tracking-widest">
+                            <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-black uppercase tracking-widest shadow-sm">
                                 <Zap className="h-4 w-4 fill-current" />
                                 Admissions Open 2026-27
                             </div>
-                            <h1 className="text-4xl lg:text-6xl font-black text-slate-900 tracking-tighter leading-[1.1]">
-                                Research <span className="text-primary italic">& Innovation</span> <br /> at Vignan
+
+                            <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-slate-900 tracking-tight leading-[0.98]">
+                                Research <span className="text-primary italic">& Innovation</span>
+                                <br /> at Vignan
                             </h1>
-                            <p className="text-base lg:text-lg text-slate-600 font-medium max-w-lg leading-relaxed">
+
+                            <p className="text-base md:text-lg text-slate-600 font-medium max-w-2xl leading-relaxed">
                                 Pursue your Ph.D with world-class faculty and state-of-the-art research facilities at Vignan's University.
                             </p>
 
-                            <div className="flex flex-wrap gap-4">
-                                <div className="flex items-center gap-3 bg-white px-6 py-4 rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100">
-                                    <div className="h-10 w-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-600">
+                            <div className="flex flex-wrap gap-6 mt-6">
+                                <div className="flex items-center gap-4 bg-white px-6 py-4 rounded-3xl shadow-2xl border border-slate-100 transform transition-transform hover:-translate-y-1">
+                                    <div className="h-12 w-12 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-600">
                                         <CheckCircle2 className="h-6 w-6" />
                                     </div>
                                     <div>
                                         <p className="text-[10px] uppercase font-black text-slate-400 tracking-wider">Placement</p>
-                                        <p className="text-lg font-black text-slate-800">92% Rate</p>
+                                        <p className="text-lg font-extrabold text-slate-900">92% Rate</p>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-3 bg-white px-6 py-4 rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100">
-                                    <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+
+                                <div className="flex items-center gap-4 bg-white px-6 py-4 rounded-3xl shadow-2xl border border-slate-100 transform transition-transform hover:-translate-y-1">
+                                    <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                                         <Star className="h-6 w-6" />
                                     </div>
                                     <div>
                                         <p className="text-[10px] uppercase font-black text-slate-400 tracking-wider">Rating</p>
-                                        <p className="text-lg font-black text-slate-800">NAAC A+</p>
+                                        <p className="text-lg font-extrabold text-slate-900">NAAC A+</p>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center gap-4 bg-white px-6 py-4 rounded-3xl shadow-2xl border border-slate-100 transform transition-transform hover:-translate-y-1">
+                                    <div className="h-12 w-12 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 font-black">R</div>
+                                    <div>
+                                        <p className="text-[10px] uppercase font-black text-slate-400 tracking-wider">Research</p>
+                                        <p className="text-lg font-extrabold text-slate-900">500+ Papers</p>
                                     </div>
                                 </div>
                             </div>
                         </motion.div>
 
                         <motion.div
-                            initial={{ opacity: 0, y: 50 }}
+                            initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.2 }}
+                            transition={{ duration: 0.9, delay: 0.12 }}
                         >
-                            <Card className="border-none shadow-2xl shadow-primary/10 bg-white/90 backdrop-blur-md relative overflow-hidden text-left max-w-[420px] mx-auto lg:ml-auto">
-                                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 blur-3xl" />
-                                {registrationSuccess ? (
-                                    <>
-                                        <div className="bg-gradient-to-r from-emerald-600 to-emerald-500 px-8 py-7">
-                                            <div className="flex items-center gap-3 mb-1">
-                                                <CheckCircle2 className="h-6 w-6 text-emerald-100" />
-                                                <h2 className="text-xl font-black text-white tracking-tight">Success!</h2>
+                            <Card className="relative overflow-hidden text-left max-w-[460px] mx-auto lg:ml-auto rounded-3xl border border-white/10 bg-white/60 backdrop-blur-md shadow-[0_30px_80px_rgba(11,37,64,0.12)]">
+                                <div className="absolute -top-20 -right-16 w-40 h-40 bg-primary/6 rounded-full blur-3xl" />
+
+                                <div className="bg-gradient-to-br from-primary to-indigo-600 px-8 py-6 rounded-t-3xl border-b border-white/10">
+                                    <div className="flex items-center gap-3 mb-0.5">
+                                        <Zap className="h-5 w-5 text-yellow-300 fill-yellow-300" />
+                                        <h1 className="text-lg font-extrabold text-white tracking-tight uppercase">Apply for Ph.D 2026</h1>
+                                    </div>
+                                    <p className="text-blue-100/90 text-[11px] font-semibold uppercase tracking-widest ml-7">
+                                        Research Admissions Portal
+                                    </p>
+                                </div>
+
+                                <CardContent className="pt-6 px-6 pb-4 space-y-5">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="space-y-1.5">
+                                            <label className="text-[10px] font-bold uppercase text-slate-400 ml-1 tracking-wider">Full Name</label>
+                                            <div className="relative group">
+                                                <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-white/90 transition-colors" />
+                                                <input
+                                                    value={formData.fullName}
+                                                    onChange={e => setFormData({ ...formData, fullName: e.target.value })}
+                                                    className="w-full bg-white/40 border-2 border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-semibold focus:border-white/30 focus:bg-white/70 transition-all outline-none"
+                                                    placeholder="Your full name"
+                                                />
                                             </div>
-                                            <p className="text-emerald-100 text-sm font-medium ml-9">Your profile has been created.</p>
-                                        </div>
-                                        <div className="p-8">
-                                            <Button className="w-full h-14 rounded-2xl text-lg font-black" onClick={() => navigate("/")}>Go to Home</Button>
-                                        </div>
-                                    </>
-                                ) : (
-                                    <>
-                                        <div className="bg-gradient-to-br from-primary via-primary to-blue-700 px-6 py-6 border-b border-white/10">
-                                            <div className="flex items-center gap-2 mb-0.5">
-                                                <Zap className="h-5 w-5 text-yellow-300 fill-yellow-300" />
-                                                <h1 className="text-lg font-black text-white tracking-tight uppercase">Apply for Ph.D 2026</h1>
-                                            </div>
-                                            <p className="text-blue-100/80 text-[10px] font-bold uppercase tracking-widest ml-7">
-                                                Research Admissions Portal
-                                            </p>
                                         </div>
 
-                                        <CardContent className="pt-6 space-y-5">
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                <div className="space-y-1.5">
-                                                    <label className="text-[10px] font-black uppercase text-slate-400 ml-1 tracking-wider">Full Name</label>
-                                                    <div className="relative group">
-                                                        <User className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 group-focus-within:text-primary transition-colors" />
-                                                        <input
-                                                            value={formData.fullName}
-                                                            onChange={e => setFormData({ ...formData, fullName: e.target.value })}
-                                                            className="w-full bg-slate-50/50 border-2 border-slate-100 rounded-xl py-2.5 pl-10 pr-4 text-sm font-bold focus:border-primary focus:bg-white transition-all outline-none"
-                                                            placeholder="Your full name"
-                                                        />
-                                                    </div>
-                                                </div>
-                                                <div className="space-y-1.5">
-                                                    <label className="text-[10px] font-black uppercase text-slate-400 ml-1 tracking-wider">Email Address</label>
-                                                    <div className="flex gap-2">
-                                                        <div className="relative group flex-1">
-                                                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 group-focus-within:text-primary transition-colors" />
-                                                            <input
-                                                                value={formData.email}
-                                                                onChange={e => setFormData({ ...formData, email: e.target.value })}
-                                                                className="w-full bg-slate-50/50 border-2 border-slate-100 rounded-xl py-2.5 pl-10 pr-4 text-sm font-bold focus:border-primary focus:bg-white transition-all outline-none"
-                                                                placeholder="name@email.com"
-                                                            />
-                                                        </div>
-                                                        <Button size="sm" onClick={handleSendEmailOtp} className="rounded-xl px-4 h-[42px] font-black uppercase text-[10px]" variant={isEmailOtpVerified ? "success" : "primary"}>
-                                                            {isEmailOtpVerified ? <Check className="h-4 w-4" /> : "Verify"}
-                                                        </Button>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className="space-y-1.5">
-                                                <label className="text-[10px] font-black uppercase text-slate-400 ml-1 tracking-wider">Mobile Number</label>
-                                                <div className="relative group">
-                                                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 group-focus-within:text-primary transition-colors" />
+                                        <div className="space-y-1.5">
+                                            <label className="text-[10px] font-bold uppercase text-slate-400 ml-1 tracking-wider">Email Address</label>
+                                            <div className="flex gap-3">
+                                                <div className="relative group flex-1">
+                                                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-white/90 transition-colors" />
                                                     <input
-                                                        value={formData.phone}
-                                                        onChange={e => setFormData({ ...formData, phone: e.target.value })}
-                                                        className="w-full bg-slate-50/50 border-2 border-slate-100 rounded-xl py-2.5 pl-10 pr-4 text-sm font-bold focus:border-primary focus:bg-white transition-all outline-none"
-                                                        placeholder="10-digit mobile number"
+                                                        value={formData.email}
+                                                        onChange={e => setFormData({ ...formData, email: e.target.value })}
+                                                        className="w-full bg-white/40 border-2 border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-semibold focus:border-white/30 focus:bg-white/70 transition-all outline-none"
+                                                        placeholder="name@email.com"
                                                     />
                                                 </div>
-                                            </div>
 
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                <div className="space-y-1.5">
-                                                    <label className="text-xs font-black uppercase text-slate-500 text-[10px] ml-1">Campus</label>
-                                                    <select
-                                                        className="w-full bg-slate-50 border-2 border-slate-100 rounded-xl py-3 px-4 text-sm font-bold focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all appearance-none"
-                                                        value={formData.campus}
-                                                        onChange={e => setFormData({ ...formData, campus: e.target.value })}
-                                                    >
-                                                        <option value="">Select Campus</option>
-                                                        <option value="guntur">Guntur</option>
-                                                    </select>
-                                                </div>
-                                                <div className="space-y-1.5">
-                                                    <label className="text-xs font-black uppercase text-slate-500 text-[10px] ml-1">Program</label>
-                                                    <select
-                                                        className="w-full bg-slate-50 border-2 border-slate-100 rounded-xl py-3 px-4 text-sm font-bold focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all appearance-none"
-                                                        value={formData.program}
-                                                        onChange={e => setFormData({ ...formData, program: e.target.value })}
-                                                    >
-                                                        <option value="phd">Ph.D</option>
-                                                    </select>
-                                                </div>
+                                                <Button size="sm" onClick={handleSendEmailOtp} className="rounded-xl px-4 h-[44px] font-black uppercase text-[11px] shadow-lg" variant={isEmailOtpVerified ? "success" : "primary"}>
+                                                    {isEmailOtpVerified ? <Check className="h-4 w-4" /> : "Verify"}
+                                                </Button>
                                             </div>
+                                        </div>
+                                    </div>
 
-                                            {formData.program && (
-                                                <div className="space-y-1.5">
-                                                    <label className="text-xs font-black uppercase text-slate-500 text-[10px] ml-1">Specialization</label>
-                                                    <select
-                                                        className="w-full bg-slate-50 border-2 border-slate-100 rounded-xl py-3 px-4 text-sm font-bold focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all appearance-none"
-                                                        value={formData.specialization}
-                                                        onChange={e => setFormData({ ...formData, specialization: e.target.value })}
-                                                    >
-                                                        <option value="">Select Specialization</option>
-                                                        {programOptions[formData.program as keyof typeof programOptions]?.map(opt => (
-                                                            <option key={opt.value} value={opt.value}>{opt.label}</option>
-                                                        ))}
-                                                    </select>
-                                                </div>
-                                            )}
-                                        </CardContent>
-                                        <CardFooter className="pb-8">
-                                            <Button
-                                                className="w-full h-12 rounded-xl text-sm font-black uppercase tracking-widest gap-2 shadow-lg shadow-emerald-500/20 bg-emerald-500 hover:bg-emerald-600 text-white transition-all transform hover:scale-[1.01]"
-                                                onClick={() => handleRegister()}
-                                                disabled={!isEmailOtpVerified}
+                                    <div className="space-y-1.5">
+                                        <label className="text-[10px] font-bold uppercase text-slate-400 ml-1 tracking-wider">Mobile Number</label>
+                                        <div className="relative group">
+                                            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-white/90 transition-colors" />
+                                            <input
+                                                value={formData.phone}
+                                                onChange={e => setFormData({ ...formData, phone: e.target.value })}
+                                                className="w-full bg-white/40 border-2 border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm font-semibold focus:border-white/30 focus:bg-white/70 transition-all outline-none"
+                                                placeholder="10-digit mobile number"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="space-y-1.5">
+                                            <label className="text-xs font-bold uppercase text-slate-500 text-[10px] ml-1">Campus</label>
+                                            <select
+                                                className="w-full bg-white/40 border-2 border-white/10 rounded-xl py-3 px-4 text-sm font-semibold focus:border-white/30 focus:ring-4 focus:ring-white/10 outline-none transition-all appearance-none"
+                                                value={formData.campus}
+                                                onChange={e => setFormData({ ...formData, campus: e.target.value })}
                                             >
-                                                Register Now <ChevronRight className="h-4 w-4" />
-                                            </Button>
-                                        </CardFooter>
-                                    </>
-                                )}
+                                                <option value="">Select Campus</option>
+                                                <option value="guntur">Guntur</option>
+                                                <option value="hyderabad">Hyderabad</option>
+                                            </select>
+                                        </div>
+
+                                        <div className="space-y-1.5">
+                                            <label className="text-xs font-bold uppercase text-slate-500 text-[10px] ml-1">Program</label>
+                                            <select
+                                                className="w-full bg-white/40 border-2 border-white/10 rounded-xl py-3 px-4 text-sm font-semibold focus:border-white/30 focus:ring-4 focus:ring-white/10 outline-none transition-all appearance-none"
+                                                value={formData.program}
+                                                onChange={e => setFormData({ ...formData, program: e.target.value })}
+                                            >
+                                                <option value="phd">Ph.D</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    {/* Always show specialization list for Ph.D (populated from programOptions.phd) */}
+                                    <div className="space-y-1.5">
+                                        <label className="text-xs font-bold uppercase text-slate-500 text-[10px] ml-1">Specialization</label>
+                                        <select
+                                            className="w-full bg-white/40 border-2 border-white/10 rounded-xl py-3 px-4 text-sm font-semibold focus:border-white/30 focus:ring-4 focus:ring-white/10 outline-none transition-all appearance-none"
+                                            value={formData.specialization}
+                                            onChange={e => setFormData({ ...formData, specialization: e.target.value })}
+                                        >
+                                            <option value="">Select Specialization</option>
+                                            {programOptions.phd.map(opt => (
+                                                <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </CardContent>
+
+                                <CardFooter className="pb-8 px-6">
+                                    <Button
+                                        className="w-full h-14 rounded-2xl text-sm font-extrabold uppercase tracking-widest gap-2 shadow-2xl bg-emerald-500 hover:bg-emerald-600 text-white transition-all transform hover:-translate-y-0.5"
+                                        onClick={() => handleRegister()}
+                                        disabled={!isEmailOtpVerified}
+                                    >
+                                        Register Now <ChevronRight className="h-4 w-4" />
+                                    </Button>
+                                </CardFooter>
                             </Card>
                         </motion.div>
                     </div>
@@ -317,17 +327,12 @@ export function Registration() {
 
                 <div className="absolute bottom-0 w-full bg-slate-900 overflow-hidden py-4 border-t border-white/5">
                     <div className="container px-4 mx-auto flex items-center gap-12 whitespace-nowrap overflow-hidden">
-                        {[
+                        {/*
                             { date: "DEC 01", title: "PhD ONLINE REGISTRATION OPENS", color: "text-primary" },
                             { date: "JAN 30", title: "LAST DATE FOR APPLICATION SUBMISSION", color: "text-rose-500" },
                             { date: "FEB 15", title: "ENTRANCE TEST & INTERVIEW", color: "text-emerald-500" },
-                        ].map((event, i) => (
-                            <div key={i} className="flex items-center gap-4 flex-shrink-0">
-                                <span className={cn("text-xs font-black px-2 py-0.5 rounded", event.color, "bg-white/5")}>{event.date}</span>
-                                <span className="text-white/80 font-bold text-[10px] tracking-[0.2em] uppercase">{event.title}</span>
-                                <div className="h-1 w-1 bg-white/20 rounded-full" />
-                            </div>
-                        ))}
+                        */}
+                        {[]}
                     </div>
                 </div>
             </section>
@@ -391,7 +396,8 @@ export function Registration() {
                                 viewport={{ once: true }}
                                 className="relative z-10 rounded-3xl overflow-hidden shadow-2xl"
                             >
-                                <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1000&q=80" alt="About" className="w-full grayscale hover:grayscale-0 transition-all duration-700" />
+                                {/* High-quality research / campus image */}
+                                <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1000&q=80" alt="Vignan research" className="w-full grayscale hover:grayscale-0 transition-all duration-700" />
                             </motion.div>
                             <div className="absolute -bottom-10 -right-10 w-2/3 h-2/3 bg-primary/10 rounded-3xl -z-0" />
                         </div>

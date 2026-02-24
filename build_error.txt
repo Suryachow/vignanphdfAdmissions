@@ -1,0 +1,3 @@
+﻿src/pages/Landing.tsx(19,5): error TS6133: 'Globe' is declared but its value is never read.
+src/pages/Landing.tsx(66,12): error TS6133: 'verifyingLogin' is declared but its value is never read.
+src/pages/Landing.tsx(67,12): error TS6133: 'loginCooldown' is declared but its value is never read.

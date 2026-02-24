@@ -190,20 +190,6 @@ const EducationForm: React.FC<EducationFormProps> = ({ data, onChange }) => {
                             </div>
 
                             <div className="space-y-3">
-                                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block ml-1">
-                                    Hall Ticket Number <span className="text-rose-500 font-bold">*</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    placeholder="HALL TICKET NO"
-                                    value={data.rollNumber || ""}
-                                    onChange={(e) => onChange("rollNumber", e.target.value)}
-                                    className="w-full px-5 py-4 bg-slate-50 border-2 border-slate-100 rounded-xl focus:border-[#004C91] focus:bg-white outline-none transition-all font-bold text-slate-700 tracking-widest uppercase"
-                                    required
-                                />
-                            </div>
-
-                            <div className="space-y-3">
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-3">
                                         <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest block ml-1">
