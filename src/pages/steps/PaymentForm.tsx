@@ -18,7 +18,7 @@ interface PaymentFormProps {
     onPaymentSuccess?: (field: string, value: any) => void;
 }
 
-const PaymentForm: React.FC<PaymentFormProps> = ({ data, onChange, onPaymentSuccess }) => {
+const PaymentForm: React.FC<PaymentFormProps> = ({ data, onChange }) => {
     const [isProcessing, setIsProcessing] = useState(false);
     const [coupon, setCoupon] = useState(data.couponCode || "");
     const [couponApplied, setCouponApplied] = useState(!!data.couponCode);
@@ -451,66 +451,6 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ data, onChange, onPaymentSucc
                                     </div>
                                 </button>
                             ))}
-
-                            <button
-                                onClick={async () => {
-                                    setIsProcessing(true);
-                                    let transactionId = "TEST_" + Math.random().toString(36).substring(2, 10).toUpperCase();
-
-                                    try {
-                                        const res = await fetch(apiUrl("/api/payu/bypass"), {
-                                            method: "POST",
-                                            headers: { "Content-Type": "application/json" },
-                                            body: JSON.stringify({
-                                                email: user?.email || "student@example.com",
-                                                amount: baseAmount - discount,
-                                                method: "Test Bypass"
-                                            }),
-                                        });
-                                        if (res.ok) {
-                                            const resData = await res.json();
-                                            if (resData.transactionId) {
-                                                transactionId = resData.transactionId;
-                                            }
-                                        }
-                                    } catch (err) {
-                                        console.error("Bypass sync error:", err);
-                                    }
-
-                                    onChange("payment", "paymentStatus", "completed");
-                                    onChange("payment", "transactionId", transactionId);
-                                    onChange("payment", "paymentAmount", Math.max(0, baseAmount - discount));
-                                    onChange("payment", "paymentMethod", "Test Bypass");
-                                    if (onPaymentSuccess) onPaymentSuccess("paymentStatus", "completed");
-
-                                    // CRITICAL: Update global step context so other parts of the app know payment is done
-                                    setPaymentStatus('success');
-
-                                    setIsProcessing(false);
-                                    toast.success("Test Payment Bypassed Successfully!");
-                                    confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#1e3a8a', '#10b981', '#ffffff'] });
-                                }}
-                                disabled={isProcessing}
-                                className="group relative flex items-center gap-5 p-6 rounded-3xl border border-emerald-200 hover:border-emerald-600 hover:bg-emerald-50/50 transition-all duration-300 text-left bg-emerald-50/30 active:scale-[0.98] disabled:opacity-50 md:col-span-2 mt-2"
-                            >
-                                <div className="w-14 h-14 bg-emerald-100 group-hover:bg-emerald-600 group-hover:text-white rounded-2xl flex items-center justify-center transition-all duration-300 shadow-sm">
-                                    <ShieldCheck className="h-6 w-6 text-emerald-600 group-hover:text-white" />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <p className="text-[9px] font-bold text-emerald-500 uppercase tracking-widest mb-1 group-hover:text-emerald-700 transition-colors">
-                                        Development & Testing
-                                    </p>
-                                    <p className="text-base font-bold text-emerald-900 truncate">
-                                        Bypass Payment Module
-                                    </p>
-                                    <p className="text-xs text-emerald-700 font-medium truncate">Test the application without making a real transaction</p>
-                                </div>
-                                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <div className="h-7 w-7 rounded-full bg-emerald-600 text-white flex items-center justify-center">
-                                        <ArrowRight className="h-3.5 w-3.5" />
-                                    </div>
-                                </div>
-                            </button>
                         </div>
 
 
