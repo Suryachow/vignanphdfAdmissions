@@ -260,14 +260,13 @@ export function Landing() {
         <div className="bg-white min-h-screen text-slate-800 font-sans selection:bg-vignan-maroon/10">
             <Toaster position="top-center" richColors />
 
-            {/* Header with High-Res Logo */}
-            <header className="vignan-header shadow-md">
-                <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+            {/* Header with High-Res Logo */}                <header className="vignan-header shadow-md">
+                <div className="container mx-auto px-4 py-3 flex justify-between items-center">
                     <div className="flex items-center">
                         <img
                             src="https://vignan.ac.in/slambook/logo.png"
                             alt="Vignan University Logo"
-                            className="h-10 md:h-16 object-contain"
+                            className="h-8 md:h-12 object-contain"
                             onError={(e) => { e.currentTarget.src = "https://1.bp.blogspot.com/-8Pnflyw0bJM/WgsOqoxxGBI/AAAAAAAAAqQ/HGFq-z4KZEU04WAtPT5bTWlKY98GFEGDgCLcBGAs/s1600/vignan%252Buniversity.png" }}
                         />
                     </div>
@@ -288,7 +287,7 @@ export function Landing() {
 
             <main>
                 {/* Hero Section with Enhanced High-Quality Background Overlay */}
-                <section className="relative min-h-[850px] flex items-center py-24 overflow-hidden">
+                <section className="relative min-h-[600px] flex items-center py-16 overflow-hidden">
                     <div className="absolute inset-0 z-0">
                         <img
                             src="https://www.amaravativoice.com/images/articles/vignan-univesity-vadlamudi-23032016.jpg"
@@ -302,7 +301,7 @@ export function Landing() {
                     </div>
 
                     <div className="container mx-auto px-6 relative z-10">
-                        <div className="flex flex-col lg:flex-row gap-12 lg:gap-24 items-center">
+                        <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 items-center">
 
                             {/* Hero Text */}
                             <div className="flex-1 space-y-8">
@@ -316,16 +315,16 @@ export function Landing() {
                                         <span className="w-2 h-2 bg-vignan-gold rounded-full animate-pulse" />
                                         <span className="text-vignan-gold text-[10px] font-black uppercase tracking-[0.3em]">Ph.D. Intake 2026-27</span>
                                     </div>
-                                    <h1 className="vignan-hero-text text-5xl md:text-7xl lg:text-8xl drop-shadow-2xl">
+                                    <h1 className="vignan-hero-text text-3xl md:text-4xl lg:text-6xl drop-shadow-2xl">
                                         A Meaningful Impact<br />
                                         <span className="text-vignan-gold italic font-serif">For a Better Society</span>
                                     </h1>
-                                    <p className="text-white/95 text-lg md:text-2xl font-medium max-w-2xl leading-relaxed italic drop-shadow-xl border-l-4 border-vignan-gold pl-6">
+                                    <p className="text-white/95 text-base md:text-lg font-medium max-w-2xl leading-relaxed italic drop-shadow-xl border-l-4 border-vignan-gold pl-5">
                                         "Have You Always Been Tagged As Below Average? Do Not Worry... You Are At The Right Place!"
                                     </p>
                                 </motion.div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-3">
                                     {homepageFeatures.slice(0, 4).map((item, i) => (
                                         <motion.div
                                             key={i}
@@ -351,10 +350,10 @@ export function Landing() {
                                 initial={{ opacity: 0, x: 50 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: 0.3 }}
-                                className="w-full max-w-[460px]"
+                                className="w-full max-w-[400px]"
                             >
                                 <div className="vignan-form-card border-t-8 border-vignan-maroon">
-                                    <div className="flex p-1.5 bg-slate-50 border border-slate-100 rounded-2xl mb-10">
+                                    <div className="flex p-1.5 bg-slate-50 border border-slate-100 rounded-2xl mb-6">
                                         <button
                                             onClick={() => setMode('register')}
                                             className={`flex-1 py-3.5 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all ${mode === 'register' ? 'bg-white text-vignan-maroon shadow-lg' : 'text-slate-400 hover:text-vignan-maroon'}`}
@@ -461,7 +460,7 @@ export function Landing() {
                                     viewport={{ once: true }}
                                     className="space-y-6"
                                 >
-                                    <h2 className="text-5xl md:text-6xl font-serif font-black text-vignan-blue leading-tight italic">
+                                    <h2 className="text-3xl md:text-4xl font-serif font-black text-vignan-blue leading-tight italic">
                                         Cutting-Edge <span className="text-vignan-maroon">Research</span> Ecosystem
                                     </h2>
                                     <p className="text-slate-600 leading-relaxed text-xl font-medium">
@@ -539,7 +538,7 @@ export function Landing() {
                                     viewport={{ once: true }}
                                     className="space-y-6"
                                 >
-                                    <h2 className="text-5xl md:text-6xl font-serif font-black text-vignan-blue leading-tight italic">
+                                    <h2 className="text-3xl md:text-4xl font-serif font-black text-vignan-blue leading-tight italic">
                                         Holistic <span className="text-vignan-maroon">Mentorship</span>
                                     </h2>
                                     <p className="text-slate-600 leading-relaxed text-xl font-medium">
@@ -569,7 +568,7 @@ export function Landing() {
 
                     <div className="container mx-auto px-6 max-w-6xl relative z-10">
                         <div className="text-center mb-16 space-y-4">
-                            <h2 className="text-4xl md:text-5xl font-serif font-black text-vignan-blue italic drop-shadow-sm">
+                            <h2 className="text-3xl md:text-4xl font-serif font-black text-vignan-blue italic drop-shadow-sm">
                                 Ph.D. <span className="text-vignan-maroon">Admissions Info</span>
                             </h2>
                             <p className="text-slate-500 max-w-4xl mx-auto text-lg font-medium leading-relaxed">
@@ -785,7 +784,7 @@ export function Landing() {
                             </div>
                             <h3 className="text-3xl font-serif font-black text-slate-900 mb-2 italic">Access Security</h3>
                             <p className="text-base text-slate-500 mb-10 leading-relaxed px-6">We've sent a 6-digit secure token to:<br /><span className="font-black text-vignan-maroon">{formData.email}</span></p>
-                            <input type="text" maxLength={6} value={emailOtpEntry} onChange={e => setEmailOtpEntry(e.target.value.replace(/\D/g, ""))} placeholder="0 0 0 0 0 0" className="w-full bg-slate-50 border-2 border-slate-100 rounded-3xl py-6 text-center font-mono text-5xl font-black text-vignan-maroon tracking-[0.3em] focus:border-vignan-maroon outline-none transition-all mb-10 shadow-inner" />
+                            <input type="text" maxLength={6} value={emailOtpEntry} onChange={e => setEmailOtpEntry(e.target.value.replace(/\D/g, ""))} placeholder="0 0 0 0 0 0" className="w-full bg-slate-50 border-2 border-slate-100 rounded-3xl py-4 text-center font-mono text-3xl font-black text-vignan-maroon tracking-[0.3em] focus:border-vignan-maroon outline-none transition-all mb-10 shadow-inner" />
                             <div className="flex gap-4">
                                 <button className="flex-1 py-4 bg-slate-100 text-slate-500 font-black uppercase tracking-widest text-[10px] rounded-2xl hover:bg-slate-200 transition-colors" onClick={() => setShowEmailOtpModal(false)}>Refuse</button>
                                 <button className="vignan-btn flex-1 py-4" onClick={verifyRegOtp} disabled={isVerifyingEmail}>
