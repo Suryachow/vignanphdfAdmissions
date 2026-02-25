@@ -2,7 +2,10 @@
  * Admin Portal – API client utilities
  */
 
-export const API_BASE: string = "http://13.204.96.58:8000";
+export const API_BASE =
+    typeof import.meta !== "undefined" && import.meta.env?.VITE_API_URL
+        ? import.meta.env.VITE_API_URL.replace(/\/$/, "")
+        : "http://13.204.96.58:8000";
 
 /** Construct a full API URL from a path (ensures no double slashes). */
 export function adminApiUrl(path: string): string {
